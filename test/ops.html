@@ -5,7 +5,10 @@
   </head>
   <body>
     <h1>Supported Operations</h1>
-    <ul>
+    <input type="radio" id="prefer" name="prefer" value="fast" checked="checked">fast
+    <input type="radio" id="prefer" name="prefer" value="sustained">sustained
+    <input type="radio" id="prefer" name="prefer" value="low">low
+    <ul id = "ul">
     <li><a href="https://brucedai.github.io/webnnt/test/add.html">ADD</a></li>
     <li><a href="https://brucedai.github.io/webnnt/test/avg_pool_2d.html">AVERAGE_POOL_2D</a></li>
     <li><a href="https://brucedai.github.io/webnnt/test/concatenation.html">CONCATENATION</a></li>
@@ -27,4 +30,19 @@
     <li><a href="https://brucedai.github.io/webnnt/test/batch_to_space_nd.html">BATCH_TO_SPACE_ND</a></li>
     </ul>
   </body>
+  <script type="text/javascript">
+    'use strict';
+    (function(){
+      let aList = document.getElementById('ul')
+        .getElementsByTagName("a");
+      const changeprefer = function (obj) {
+        let preferValue = document.querySelector('input[name="prefer"]:checked').value;
+        obj.currentTarget.href += "?prefer=" + preferValue;
+      };
+
+      for (let i of aList) {
+        i.onclick = changeprefer;
+      }
+    })();
+  </script>
 </html>
