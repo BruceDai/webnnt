@@ -3,41 +3,49 @@
     <meta charset="utf-8">
     <title>Supported Operations</title>
     <style>
-      h1{
+      #desc{
+        background: #fceeed;
+        padding: 3px;
+        color: #585858;
         font-family: 'Segoe UI', sans-serif;
+        letter-spacing: 1px;
+      }
+      #txt{
+        width: 40%;
+        float: left;
+        font-family: 'Segoe UI', sans-serif;
+      }
+      h1{
         color: #fa7268;
       }
-      #prefer{
-        font-family: 'Segoe UI', sans-serif;
-        /* color: #FA7268; */
+      #links{
+        color: #FA7268;
       }
       #sub{
-        width: 65%;
-        height: 97%;
+        width: 60%;
+        height: 96%;
         float: right;
         display: none
       }
-      #desc{
-        background: #fceeed;
-        font-family: 'Segoe UI', sans-serif;
-      }
       #load{
-        width: 50%;
+        width: 35%;
         float:right;
       }
     </style>
   </head>
   <body>
     <div id="desc">https://brucedai.github.io/webnnt/test/add.html?prefer=fast</div>
-    <iframe id="sub" src="https://brucedai.github.io/webnnt/test/add.html?prefer=fast" frameborder="0" onload="stateChange(this)"></iframe>
-    <div id="load"><img src="/loading.gif"></div>
-    <h1>Supported Operations</h1>
-    <div id="prefer" onclick="setPrefer()">Preference:
-      <input type="radio" name="prefer" value="fast" checked="checked">fast
-      <input type="radio" name="prefer" value="sustained">sustained
-      <input type="radio" name="prefer" value="low">low
+    <div id="txt">
+      <h1>Supported Operations</h1>
+      <div id="prefer" onclick="setPrefer()">Preference:
+        <input type="radio" name="prefer" value="fast" checked="checked">fast
+        <input type="radio" name="prefer" value="sustained">sustained
+        <input type="radio" name="prefer" value="low">low
+      </div>
+      <div id="links"></div>
     </div>
-    <div id="test"></div>
+    <div id="load"><img src="https://brucedai.github.io/webnnt/test/loading.gif"></div>
+    <iframe id="sub" src="https://brucedai.github.io/webnnt/test/add.html?prefer=fast" frameborder="0" onload="stateChange(this)"></iframe>
   </body>
 
   <script type="text/javascript">
@@ -71,27 +79,26 @@
         "TRANSPOSE": "https://brucedai.github.io/webnnt/test/transpose.html",
         "BATCH_TO_SPACE_ND": "https://brucedai.github.io/webnnt/test/batch_to_space_nd.html",
       };
-
       let currenturl = "https://brucedai.github.io/webnnt/test/add.html?prefer=";
       let iframe = document.getElementById('sub');
-      window.changePrefer = function (obj) {
+      let desc = document.getElementById('desc');
+      let links = document.getElementById("links");
+      
+      window.chooseOps = function (obj) {
         function resetColor() {
           for (let l in linkList) {
-            let div = document.getElementById(l);
-            div.setAttribute('style', 'cursor: pointer; color: #FA7268; text-decoration:underline; font-family: Segoe UI, sans-serif');
+            let p = document.getElementById(l);
+            p.style.color = "#fa7268";
           }
         }
-
         iframe.setAttribute('style', 'display: none;');
         document.getElementById('load').setAttribute('style', 'display: block;');
-        
         let preferValue = document.querySelector('input[name="prefer"]:checked').value;
         currenturl = obj.getAttribute("value") + '?prefer=';
         iframe.src = currenturl + preferValue;
-        let desc = document.getElementById('desc');
         desc.innerHTML = iframe.src;
         resetColor();
-        obj.setAttribute('style', 'cursor: pointer; color: #368bff; text-decoration:underline; font-family: Segoe UI, sans-serif');
+        obj.style.color = "#368bff";
       };
 
       window.setPrefer = function() {
@@ -99,19 +106,19 @@
         document.getElementById('load').setAttribute('style', 'display: block;');
         let preferValue = document.querySelector('input[name="prefer"]:checked').value;
         iframe.src = currenturl + preferValue;
-        let desc = document.getElementById('desc');
         desc.innerHTML = iframe.src;
       };
 
-      let test = document.getElementById("test");
-      for (let t in linkList) {
-        let div = document.createElement('p');
-        div.setAttribute('id', t);
-        div.setAttribute('value', linkList[t]);
-        div.setAttribute('onclick', 'changePrefer(this)');
-        div.setAttribute('style', 'cursor: pointer; color: #FA7268; text-decoration:underline; font-family: Segoe UI, sans-serif');
-        div.innerHTML = t;
-        test.appendChild(div);
+      for (let l in linkList) {
+        let p = document.createElement('p');
+        p.setAttribute('id', l);
+        p.setAttribute('value', linkList[l]);
+        p.setAttribute('onclick', 'chooseOps(this)');
+        p.style.color = "#fa7268";
+        p.style.cursor = "pointer";
+        p.style.textDecoration = "underline";
+        p.innerHTML = l;
+        links.appendChild(p);
       }
     })();
   </script>
