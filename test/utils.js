@@ -38,6 +38,7 @@ function setOptions() {
   var parameterStr = window.location.search.substr(1);
   var reg = new RegExp("(^|&)prefer=([^&]*)(&|$)", "i");
   var r = parameterStr.match(reg);
+  var macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'];
   if (r != null) {
     var prefer = unescape(r[2]).toLowerCase();
     if(navigator.ml.isPolyfill) {
@@ -60,6 +61,10 @@ function setOptions() {
           "backend": 'WebML',
           "prefer": 'sustained'
         };
+        // As MPS computes on FP16, use 5ULP of FP16 range
+        if (macosPlatforms.indexOf(navigator.platform) !== -1) {
+          episilonCTS = EPISILON5ULP;
+        }
       } else if (prefer === "fast") {
         // use PREFER_FAST_SINGLE_ANSWER for Linux/Windows mkldnn backend
         prefer = nn.PREFER_FAST_SINGLE_ANSWER;
@@ -73,9 +78,7 @@ function setOptions() {
           "backend": 'WebML',
           "prefer": 'low'
         };
-      }
-      // As MPS computes on FP16, use 5ULP of FP16 range
-      episilonCTS = EPISILON5ULP;
+      }      
     }
   }
 }
