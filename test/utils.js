@@ -74,6 +74,8 @@ function setOptions() {
           "prefer": 'low'
         };
       }
+      // As MPS computes on FP16, use 5ULP of FP16 range
+      episilonCTS = EPISILON5ULP;
     }
   }
 }
