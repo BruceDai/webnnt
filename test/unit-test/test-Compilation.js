@@ -1,5 +1,4 @@
 describe('Unit Test/Compilation Test', function() {
-  const assert = chai.assert;
   const TENSOR_DIMENSIONS = [2, 2, 2, 2];
   let nn;
 
@@ -300,53 +299,46 @@ describe('Unit Test/Compilation Test', function() {
       });
     });
 
-    it('raise error when passing a parameter', function() {
-      return nn.createModel(options).then((model)=>{
-        let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
-        model.addOperand(op);
-        model.addOperand(op);
-        let data = new Float32Array(product(op.dimensions));
-        data.fill(0);
-        model.setOperandValue(1, data);
-        model.addOperand({type: nn.INT32});
-        model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
-        model.addOperand(op);
-        model.addOperation(nn.ADD, [0, 1, 2], [3]);
-        model.identifyInputsAndOutputs([0], [3]);
-        model.finish().then(()=>{
-          model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
-            compilation.finish().then(()=>{
-              assert.throws(()=>{
-                compilation.createExecution(undefined);
-              });
-            });
-          });
-        });
+    it('raise error when passing a parameter', async function() {
+      let model = await nn.createModel(options);
+      let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
+      model.addOperand(op);
+      model.addOperand(op);
+      let data = new Float32Array(product(op.dimensions));
+      data.fill(0);
+      model.setOperandValue(1, data);
+      model.addOperand({type: nn.INT32});
+      model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
+      model.addOperand(op);
+      model.addOperation(nn.ADD, [0, 1, 2], [3]);
+      model.identifyInputsAndOutputs([0], [3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(nn.PREFER_LOW_POWER);
+      await compilation.finish();
+      await assertThrowsAsync(async() => {
+        await compilation.createExecution(undefined);
       });
     });
 
-    it('raise error when calling this function with compilation not being finished', function() {
-      return nn.createModel(options).then((model)=>{
-        let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
-        model.addOperand(op);
-        model.addOperand(op);
-        let data = new Float32Array(product(op.dimensions));
-        data.fill(0);
-        model.setOperandValue(1, data);
-        model.addOperand({type: nn.INT32});
-        model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
-        model.addOperand(op);
-        model.addOperation(nn.ADD, [0, 1, 2], [3]);
-        model.identifyInputsAndOutputs([0], [3]);
-        model.finish().then(()=>{
-          model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
-            assert.throws(()=>{
-              compilation.createExecution();
-            });
-          });
-        });
+    it('raise error when calling this function with compilation not being finished', async function() {
+      let model = await nn.createModel(options);
+      let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
+      model.addOperand(op);
+      model.addOperand(op);
+      let data = new Float32Array(product(op.dimensions));
+      data.fill(0);
+      model.setOperandValue(1, data);
+      model.addOperand({type: nn.INT32});
+      model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
+      model.addOperand(op);
+      model.addOperation(nn.ADD, [0, 1, 2], [3]);
+      model.identifyInputsAndOutputs([0], [3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(nn.PREFER_LOW_POWER);
+      await assertThrowsAsync(async() => {
+        await compilation.createExecution();
       });
     });
   });
