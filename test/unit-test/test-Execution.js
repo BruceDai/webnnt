@@ -322,31 +322,26 @@ describe('Unit Test/Execution Test', function() {
       });
     });
 
-    it('check return value is of "void" type', function() {
-      return nn.createModel(options).then((model)=>{
-        let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
-        model.addOperand(op);
-        model.addOperand(op);
-        let data = new Float32Array(product(op.dimensions));
-        data.fill(0);
-        model.setOperandValue(1, data);
-        model.addOperand({type: nn.INT32});
-        model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
-        model.addOperand(op);
-        model.addOperation(nn.ADD, [0, 1, 2], [3]);
-        model.identifyInputsAndOutputs([0], [3]);
-        model.finish().then((result)=>{
-          model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
-            compilation.finish().then(()=>{
-              compilation.createExecution().then((execution)=>{
-                let outputData = new Float32Array(product(op.dimensions));
-                assert.equal(execution.setOutput(0, outputData), undefined);
-              });
-            });
-          });
-        });
-      });
+    it('check return value is of "void" type', async function() {
+      let model = await nn.createModel(options);
+      let op = {type: nn.TENSOR_FLOAT32, dimensions: TENSOR_DIMENSIONS};
+      model.addOperand(op);
+      model.addOperand(op);
+      let data = new Float32Array(product(op.dimensions));
+      data.fill(0);
+      model.setOperandValue(1, data);
+      model.addOperand({type: nn.INT32});
+      model.setOperandValue(2, new Int32Array([nn.FUSED_NONE]));
+      model.addOperand(op);
+      model.addOperation(nn.ADD, [0, 1, 2], [3]);
+      model.identifyInputsAndOutputs([0], [3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(nn.PREFER_LOW_POWER);
+      await compilation.finish()
+      let execution = await compilation.createExecution();
+      let outputData = new Float32Array(product(op.dimensions));
+      assert.equal(execution.setOutput(0, outputData), undefined);
     });
 
     it('raise error when the value being set to \'index\' is equal or greater than the size of outputs', function() {
