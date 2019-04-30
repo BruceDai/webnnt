@@ -50,5 +50,12 @@
         "pass": 125,
         "fail": 18,
         "block": 0
+    },
+    "Mac-fast": {
+        "total": 143,
+        "pass": 143,
+        "fail": 0,
+        "block": 0
     }
+
 }
