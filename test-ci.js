@@ -76,19 +76,12 @@ let csvNA = null;
   let backendModel;
   let baseLineData = new Map();
   let lists = [
-    'Feature',
-    'Case Id',
-    'Test Case',
-    'Mac-WASM',
-    'Mac-WebGL',
-    'Android-WASM',
-    'Android-WebGL',
-    'Windows-WASM',
-    'Windows-WebGL',
-    'Linux-WASM',
-    'Linux-WebGL',
-    'Mac-fast',
+    'Linux-Polyfill-Fast-WASM',
+    'Mac-Polyfill-Fast-WASM',
+    'Android-Polyfill-Fast-WASM',
+    'Windows-Polyfill-Fast-WASM',
   ];
+
   let checkStatus = async function(backendModel, results) {
     for (let i=0; i< lists.length; i++) {
       if (lists[i] == backendModel) {
@@ -186,24 +179,15 @@ let csvNA = null;
   };
 
   let testResult = async function() {
-    let backendModels = [
-      'Mac-MPS',
-      'Mac-BNNS',
-      'Mac-WASM',
-      'Mac-WebGL',
-      'Android-NNAPI',
-      'Android-WASM',
-      'Android-WebGL',
-      'Windows-clDNN',
-      'Windows-WASM',
-      'Windows-WebGL',
-      'Linux-clDNN',
-      'Linux-WASM',
-      'Linux-WebGL',
-      'Mac-fast'
+    let backendModels =[
+      'Linux-Polyfill-Fast-WASM',
+      'Mac-Polyfill-Fast-WASM',
+      'Android-Polyfill-Fast-WASM',
+      'Windows-Polyfill-Fast-WASM',
     ];
+    
     let prefers = [
-      'fast',
+      'Fast',
     ];
     await driver.get('chrome://gpu');
     let vr = await driver.findElement(By.xpath('//*[@id="info-view-table"]/tbody/tr[2]/td[2]/span')).getText();
