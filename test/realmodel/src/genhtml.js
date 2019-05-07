@@ -64,7 +64,7 @@ async function saveHtml(input, output) {
 }
 async function generateHtml(data) {
   for (let i = 0; i < data.length; i++) {
-    let str = ` <script src="./realmodel/testcase/${data[i]}"></script>\n`
+    let str = ` <script src="./realmodel/testcase/${JSON_DATA.getModelName()}/${data[i]}"></script>\n`
     caseList += str;
   }
 }
