@@ -6,14 +6,14 @@
 
 ### 2. Set config.json file
 
-* `localURL`: url for intel/webml-polyfill/test/realmodel/index.html
-* `modelName`:test model name  for example(squeezenet1.1)  Details please see the below the form           
-* `url`: download model file  Details please see the below the form
+* `localURL`: Local URL to browser test/realmodel/index.html
+* `modelName`: Target ONNX model name 
+* `url`: Download URL of target ONNX model package file
 
 
-### 3. Support ONNX.js models
+### 3. Supported ONNX.js models
 
-|  ModelName |   Url   |
+|  ModelName |   URL   |
 |  :---:  |  :---  |
 |  squeezenet1.1  |   https://s3.amazonaws.com/onnx-model-zoo/squeezenet/squeezenet1.1/squeezenet1.1.tar.gz  | 
 |  mobilenetv2-1.0  |   https://s3.amazonaws.com/onnx-model-zoo/mobilenet/mobilenetv2-1.0/mobilenetv2-1.0.tar.gz  |
@@ -54,7 +54,7 @@ $ npm run getTCRes
 $ npm run genTC
 ```
 
-### Generate TestCase Html
+### Generate all-in-one TestCase Html
 ```sh
 $ npm run genHtml
 ```

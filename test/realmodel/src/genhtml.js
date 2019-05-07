@@ -8,7 +8,7 @@ let htmlValue
 
 let filePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`, `${JSON_DATA.getModelName()}.txt`);
 if (!fs.existsSync(filePath)) throw (`Can't get ${filePath}`);
-let stream = fs.createReadStream(filePath, { flags: 'r', encoding: 'utf-8' });
+let stream = fs.createReadStream(filePath, {flags: 'r', encoding: 'utf-8'});
 stream.on('data', function (d) {
   buf += d.toString();
 });
@@ -51,7 +51,7 @@ let begin = `
 `
 async function saveHtml(input, output) {
   let saveFileDirs = path.join(__dirname, '..', '..');
-  let saveStream = fs.createWriteStream(path.join(saveFileDirs, output), { flags: 'w', encoding: 'utf-8' });
+  let saveStream = fs.createWriteStream(path.join(saveFileDirs, output), {flags: 'w', encoding: 'utf-8'});
   saveStream.on('error', (err) => {
     console.error(err);
   });
