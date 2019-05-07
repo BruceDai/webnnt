@@ -76,6 +76,9 @@ let csvNA = null;
   let backendModel;
   let baseLineData = new Map();
   let lists = [
+    'Feature',
+    'Case Id',
+    'Test Case',
     'Linux-Polyfill-Fast-WASM',
     'Mac-Polyfill-Fast-WASM',
     'Android-Polyfill-Fast-WASM',
@@ -187,7 +190,7 @@ let csvNA = null;
     ];
     
     let prefers = [
-      'Fast',
+      'fast',
     ];
     await driver.get('chrome://gpu');
     let vr = await driver.findElement(By.xpath('//*[@id="info-view-table"]/tbody/tr[2]/td[2]/span')).getText();
@@ -195,8 +198,9 @@ let csvNA = null;
     console.log('chrome version is :' + vr + '\n');
     for (let j of prefers) {
       let totalResult;
+      j1 = j.replace(/(\w)/,function(v){return v.toUpperCase()});
       for (let i of backendModels) {
-        if ((i.indexOf(platform) != -1) && (i.indexOf(j) != -1)) {
+        if ((i.indexOf(platform) != -1) && (i.indexOf(j1) != -1)) {
           backendModel = i;
           console.log('Begin test with : ' + i + ' prefer.');
           totalResult = baselinejson[i];
