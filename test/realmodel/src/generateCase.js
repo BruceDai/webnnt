@@ -101,7 +101,7 @@ async function splitContext(context) {
     let savePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`);
     var readDir = fs.readdirSync(savePath);
     let count = 1;
-    for (let i in readDir){
+    for (let i in readDir) {
       regex = /averagepool-/;
       matchFlat = regex.test(readDir[i]);
       if (matchFlat) {
@@ -111,7 +111,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for AVERAGE_POOL_2D example/${count}', async function() {
+    it('Check result for AVERAGE_POOL_2D example/${JSON_DATA.getModelName()}-averagepool-${count}', async function() {
       this.timeout(120000);
       let model = await nn.createModel(options);
       let operandIndex = 0;
@@ -185,7 +185,7 @@ async function splitContext(context) {
     let savePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`);
     var readDir = fs.readdirSync(savePath);
     let count = 1;
-    for (let i in readDir){
+    for (let i in readDir) {
       regex = /maxpool-/;
       matchFlat = regex.test(readDir[i]);
       if (matchFlat) {
@@ -195,7 +195,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for max_pool_2d example/${count}', async function() {
+  it('Check result for max_pool_2d example/${JSON_DATA.getModelName()}-maxpool-${count}', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -269,7 +269,7 @@ async function splitContext(context) {
     let savePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`);
     var readDir = fs.readdirSync(savePath);
     let count = 1;
-    for (let i in readDir){
+    for (let i in readDir) {
       regex = /concatenation-/;
       matchFlat = regex.test(readDir[i]);
       if (matchFlat) {
@@ -279,7 +279,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for concatenation example/${count}', async function() {
+  it('Check result for concatenation example/${JSON_DATA.getModelName()}-concatenation-${count}', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -365,7 +365,7 @@ async function splitContext(context) {
     let savePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`);
     var readDir = fs.readdirSync(savePath);
     let count = 1;
-    for (let i in readDir){
+    for (let i in readDir) {
       regex = /conv2d-/;
       matchFlat = regex.test(readDir[i]);
       if (matchFlat) {
@@ -375,7 +375,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for conv_2d example/${count}', async function() {
+  it('Check result for conv_2d example/${JSON_DATA.getModelName()}-conv2d-${count}', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -476,7 +476,7 @@ async function splitContext(context) {
     let savePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`);
     var readDir = fs.readdirSync(savePath);
     let count = 1;
-    for (let i in readDir){
+    for (let i in readDir) {
       regex = /reshape-/;
       matchFlat = regex.test(readDir[i]);
       if (matchFlat) {
@@ -486,7 +486,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for reshape example/${count}', async function() {
+  it('Check result for reshape example/${JSON_DATA.getModelName()}-reshape-${count}', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;

@@ -54,7 +54,7 @@ $ npm run getTCRes
 $ npm run genTC
 ```
 
-### Generate all in one TestCase Html
+### Generate TestCase Html
 ```sh
 $ npm run genHtml
 ```

@@ -6,7 +6,7 @@ let buf = '';
 let caseList = '\n';
 let htmlValue
 
-let filePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}.txt`);
+let filePath = path.join(__dirname, '..', 'testcase', `${JSON_DATA.getModelName()}`, `${JSON_DATA.getModelName()}.txt`);
 if (!fs.existsSync(filePath)) throw (`Can't get ${filePath}`);
 let stream = fs.createReadStream(filePath, { flags: 'r', encoding: 'utf-8' });
 stream.on('data', function (d) {
