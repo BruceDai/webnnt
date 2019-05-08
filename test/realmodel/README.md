@@ -61,7 +61,7 @@ $ npm run genHtml
 
 
 ## Output
-* `../<modelName>.html`: auto generated all in one TestCase Html.
+* `../<modelName>.html`: auto generated all-in-one TestCase Html.
 * `./testcase/<modelName>`: auto generated folder for saving TestCase files.
 * `./testcase/res`: auto generated folder for resource files.
 * `./model`: auto generated folder for saving model files.
