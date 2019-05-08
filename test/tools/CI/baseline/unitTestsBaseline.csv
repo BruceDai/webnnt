@@ -1,4 +1,4 @@
-Feature,Case Id,Test Case,Mac-Polyfill-Fast-WASM,Android-Polyfill-Fast-WASM,Windows-Polyfill-Fast-WASM,Linux-Polyfill-Fast-WASM
+Feature,Case Id,Test Case,macOS-Polyfill-Fast-WASM,Android-Polyfill-Fast-WASM,Win-Polyfill-Fast-WASM,Linux-Polyfill-Fast-WASM
 Unit Test/Base Test,Unit Test/Base Test/1,check namespace,Pass,Pass,Pass,Pass
 Unit Test/Base Test,Unit Test/Base Test/2,check getNeuralNetworkContext,Pass,Pass,Pass,Pass
 CTS,CTS/1,check result for Add example,Pass,Pass,Pass,Pass

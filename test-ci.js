@@ -32,9 +32,9 @@ let csvNA = null;
   if (sys == 'Linux') {
     platform = 'Linux';
   } else if (sys == 'Darwin') {
-    platform = 'Mac';
+    platform = 'macOS';
   } else if (sys == 'Windows_NT') {
-    platform = 'Windows';
+    platform = 'Win';
   } else {
     let string = 'We do not support ' + sys + ' as run platform';
     throw new Error(string);
@@ -80,9 +80,9 @@ let csvNA = null;
     'Case Id',
     'Test Case',
     'Linux-Polyfill-Fast-WASM',
-    'Mac-Polyfill-Fast-WASM',
+    'macOS-Polyfill-Fast-WASM',
     'Android-Polyfill-Fast-WASM',
-    'Windows-Polyfill-Fast-WASM',
+    'Win-Polyfill-Fast-WASM',
   ];
 
   let checkStatus = async function(backendModel, results) {
@@ -184,9 +184,9 @@ let csvNA = null;
   let testResult = async function() {
     let backendModels =[
       'Linux-Polyfill-Fast-WASM',
-      'Mac-Polyfill-Fast-WASM',
+      'macOS-Polyfill-Fast-WASM',
       'Android-Polyfill-Fast-WASM',
-      'Windows-Polyfill-Fast-WASM',
+      'Win-Polyfill-Fast-WASM',
     ];
     
     let prefers = [

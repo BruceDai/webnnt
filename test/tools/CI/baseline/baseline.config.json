@@ -15,13 +15,13 @@
         "fail": 0,
         "block": 0
     },
-    "Mac-Polyfill-Fast-WASM": {
+    "macOS-Polyfill-Fast-WASM": {
         "total": 143,
         "pass": 143,
         "fail": 0,
         "block": 0
     },
-    "Windows-Polyfill-Fast-WASM": {
+    "Win-Polyfill-Fast-WASM": {
         "total": 143,
         "pass": 143,
         "fail": 0,
