@@ -192,7 +192,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for max_pool_2d example/${count} of ${JSON_DATA.getModelName()} model', async function() {
+  it('Check result for MAX_POOL_2D example/${count} of ${JSON_DATA.getModelName()} model', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -276,7 +276,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for concatenation example/${count} of ${JSON_DATA.getModelName()} model', async function() {
+  it('Check result for CONCATENATION example/${count} of ${JSON_DATA.getModelName()} model', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -372,7 +372,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for conv_2d example/${count} of ${JSON_DATA.getModelName()} model', async function() {
+  it('Check result for CONV_2D example/${count} of ${JSON_DATA.getModelName()} model', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -483,7 +483,7 @@ async function splitContext(context) {
     let caseSample = `describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-  it('Check result for reshape example/${count} of ${JSON_DATA.getModelName()} model', async function() {
+  it('Check result for RESHAPE example/${count} of ${JSON_DATA.getModelName()} model', async function() {
     this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
