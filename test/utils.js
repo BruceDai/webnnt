@@ -65,7 +65,9 @@ function setOptions() {
           "prefer": 'sustained'
         };
         // As MPS computes on FP16, use 5ULP of FP16 range
-        if (macosPlatforms.indexOf(navigator.platform) !== -1 || windowsPlatforms.indexOf(navigator.platform) !== -1 || /Android/.test(userAgent))
+        //if (macosPlatforms.indexOf(navigator.platform) !== -1 || windowsPlatforms.indexOf(navigator.platform) !== -1)
+        if (/Android/.test(userAgent))
+        {
           episilonCTS = EPISILON5ULP;
         }
       } else if (prefer === "fast") {
