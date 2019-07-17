@@ -4,6 +4,7 @@ let options = {};
 const EPISILON = 1e-5;
 const EPISILON5ULP = 5.0 * 0.0009765625;
 let episilonCTS = EPISILON;
+let rtol = 5.0 * 1.1920928955078125e-7;
 
 function product(array) {
   return array.reduce((accumulator, currentValue) => accumulator * currentValue);
@@ -11,7 +12,7 @@ function product(array) {
 
 function almostEqual(a, b, episilon=1e-6) {
   let delta = Math.abs(a - b);
-  if (delta < episilon) {
+  if (delta <= episilon + rtol * Math.abs(b)) {
     return true;
   } else {
     console.warn(`a(${a}) b(${b}) delta(${delta})`);
@@ -65,10 +66,10 @@ function setOptions() {
           "prefer": 'sustained'
         };
         // As MPS computes on FP16, use 5ULP of FP16 range
-        //if (macosPlatforms.indexOf(navigator.platform) !== -1 || windowsPlatforms.indexOf(navigator.platform) !== -1)
-        if (/Android/.test(userAgent))
-        {
+        if (macosPlatforms.indexOf(navigator.platform) !== -1 || windowsPlatforms.indexOf(navigator.platform) !== -1) {
+        // if (/Android/.test(userAgent)) {
           episilonCTS = EPISILON5ULP;
+          rtol = EPISILON5ULP;
         }
       } else if (prefer === "fast") {
         // use PREFER_FAST_SINGLE_ANSWER for Linux/Windows mkldnn backend
