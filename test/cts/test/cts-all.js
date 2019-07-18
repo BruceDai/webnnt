@@ -1,5 +1,5 @@
 describe('CTS', function() {
-  this.timeout(10000);
+  this.timeout(20000);
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
