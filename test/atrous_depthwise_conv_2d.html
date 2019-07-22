@@ -17,6 +17,7 @@
     </script>
     <script>
       mocha.setup('bdd');
+      mocha.setup({timeout:20000});
     </script>
     <script src="./cts/test_supplement/atrous_depthwise_conv2d.js"></script>
     <script src="./cts/test_supplement/atrous_depthwise_conv2d_same.js"></script>

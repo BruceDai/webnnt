@@ -17,6 +17,7 @@
     </script>
     <script>
       mocha.setup('bdd');
+      mocha.setup({timeout:20000});
     </script>
     <script src="./cts/test/V1_1/transpose.js"></script>
     <script src="./cts/test/V1_1/transpose_float_1.js"></script>

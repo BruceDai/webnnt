@@ -17,6 +17,7 @@
     </script>
     <script>
       mocha.setup('bdd');
+      mocha.setup({timeout:20000});
     </script>
     <script src="./cts/test/V1_0/conv_1_h3_w2_SAME.js"></script>
     <script src="./cts/test/V1_0_plus/conv_1_h3_w2_SAME_relu.js"></script>

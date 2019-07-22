@@ -15,6 +15,7 @@
     <script>
       window.onload = setOptions;
       mocha.setup('bdd');
+      mocha.setup({timeout:20000});
     </script>
     <script src="./base/base.js"></script>
     <script src="./unit-test/test-Model.js"></script>

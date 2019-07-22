@@ -17,6 +17,7 @@
     </script>
     <script>
       mocha.setup('bdd');
+      mocha.setup({timeout:20000});
     </script>
     <script src="./cts/test/V1_1/batch_to_space.js"></script>
     <script src="./cts/test/V1_1/batch_to_space_float_1.js"></script>

@@ -1,5 +1,4 @@
 describe('CTS Supplement Test', function() {
-  this.timeout(10000);
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
