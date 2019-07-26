@@ -2,7 +2,7 @@ describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
   it('Check result for layer-1 CONV_2D example/1 of squeezenet1.1 model', async function() {
-    this.timeout(120000);
+    this.timeout(220000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -94,7 +94,7 @@ describe('CTS Real Model Test', function() {
   });
 
   it('Check result for layer-2 MAX_POOL_2D example/1 of squeezenet1.1 model', async function() {
-    this.timeout(120000);
+    this.timeout(220000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
