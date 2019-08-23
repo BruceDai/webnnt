@@ -47,7 +47,7 @@ describe('Unit Test/Compilation Test', function() {
         model.identifyInputsAndOutputs([0], [3]);
         await model.finish();
         let compilation = await model.createCompilation();
-        assert.equal(compilation.setPreference(nn.PREFER_LOW_POWER), undefined);
+        assert.equal(compilation.setPreference(getPreferenceCode(options.prefer)), undefined);
     });
 
     it('passing a parameter with value being in 0-2 is ok', function() {
@@ -66,7 +66,7 @@ describe('Unit Test/Compilation Test', function() {
         model.finish().then((result)=>{
           model.createCompilation().then((compilation)=>{
             assert.doesNotThrow(() => {
-              compilation.setPreference(nn.PREFER_LOW_POWER);
+              compilation.setPreference(getPreferenceCode(options.prefer));
             });
           });
         });
@@ -135,7 +135,7 @@ describe('Unit Test/Compilation Test', function() {
       await model.finish();
       let compilation = await model.createCompilation();
       assert.throws(() => {
-        compilation.setPreference(nn.PREFER_LOW_POWER, nn.PREFER_LOW_POWER);
+        compilation.setPreference(getPreferenceCode(options.prefer), getPreferenceCode(options.prefer));
       });
     });
 
@@ -156,7 +156,7 @@ describe('Unit Test/Compilation Test', function() {
           model.createCompilation().then((compilation)=>{
             compilation.finish().then(()=>{
               assert.throws(() => {
-                compilation.setPreference(nn.PREFER_LOW_POWER);
+                compilation.setPreference(getPreferenceCode(options.prefer));
               });
             });
           });
@@ -202,7 +202,7 @@ describe('Unit Test/Compilation Test', function() {
         model.identifyInputsAndOutputs([0], [3]);
         model.finish().then((result)=>{
           model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
+            compilation.setPreference(getPreferenceCode(options.prefer));
             assert.doesNotThrow(()=>{
               compilation.finish().then((result)=>{
                 assert.strictEqual(result, 0);
@@ -228,7 +228,7 @@ describe('Unit Test/Compilation Test', function() {
       model.identifyInputsAndOutputs([0], [3]);
       await model.finish();
       let compilation = await model.createCompilation();
-      compilation.setPreference(nn.PREFER_LOW_POWER);
+      compilation.setPreference(getPreferenceCode(options.prefer));
       await assertThrowsAsync(async() => {
         await compilation.finish(undefined);
       });
@@ -249,7 +249,7 @@ describe('Unit Test/Compilation Test', function() {
         model.identifyInputsAndOutputs([0], [3]);
         model.finish().then((result)=>{
           model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
+            compilation.setPreference(getPreferenceCode(options.prefer));
             assert.doesNotThrow(()=>{
               compilation.finish().then(()=>{
                 compilation.finish().catch((error)=>{
@@ -280,7 +280,7 @@ describe('Unit Test/Compilation Test', function() {
         model.identifyInputsAndOutputs([0], [3]);
         model.finish().then(()=>{
           model.createCompilation().then((compilation)=>{
-            compilation.setPreference(nn.PREFER_LOW_POWER);
+            compilation.setPreference(getPreferenceCode(options.prefer));
             compilation.finish().then(()=>{
               assert.isFunction(compilation.createExecution);
             });
@@ -304,7 +304,7 @@ describe('Unit Test/Compilation Test', function() {
       model.identifyInputsAndOutputs([0], [3]);
       await model.finish();
       let compilation = await model.createCompilation();
-      compilation.setPreference(nn.PREFER_LOW_POWER);
+      compilation.setPreference(getPreferenceCode(options.prefer));
       await compilation.finish();
       await assertThrowsAsync(async() => {
         await compilation.createExecution(undefined);
@@ -326,7 +326,7 @@ describe('Unit Test/Compilation Test', function() {
       model.identifyInputsAndOutputs([0], [3]);
       await model.finish();
       let compilation = await model.createCompilation();
-      compilation.setPreference(nn.PREFER_LOW_POWER);
+      compilation.setPreference(getPreferenceCode(options.prefer));
       await assertThrowsAsync(async() => {
         await compilation.createExecution();
       });
