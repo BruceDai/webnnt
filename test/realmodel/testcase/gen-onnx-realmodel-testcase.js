@@ -5,7 +5,7 @@ list = ['squeezenet1.1', 'mobilenetv2-1.0'];
 result = "describe('CTS Real Model Test', function() {" + '\n' + '  ' + "const assert = chai.assert;" + '\n' + '  ' + "const nn = navigator.ml.getNeuralNetworkContext();";
 for (let i = 0; i < list.length; i++) {
   let filePath1 = path.join(__dirname, `${list[i]}`, `${list[i]}.txt`);
-  let data= fs.readFileSync(filePath1);
+  let data = fs.readFileSync(filePath1);
   data = JSON.parse(data);
   let filePath2 = path.join(__dirname, `${list[i]}`);
   for (let i = 0; i < data.length; i++) {
