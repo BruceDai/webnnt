@@ -1,7 +1,8 @@
-describe('CTS Real Model Test', function() {
+ describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
   it('Check result for layer-1 CONV_2D example/1 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -86,16 +87,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-1 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,3,3,3], input dimensions: [1,224,224,3], output dimensions: [1,111,111,64], pad: [0], act: [1], stride: [2]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-1", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,3], "input dimensions": [1,224,224,3], "output dimensions": [1,111,111,64], "stride": [2], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-2 MAX_POOL_2D example/1 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
@@ -152,16 +171,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, i0_input);
     let output_output = new Float32Array(type2_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-2 MAX_POOL_2D of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,111,111,64], output dimensions: [1,55,55,64], stride: [2], filter: [3], padding: [0], activation: [0]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations ; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-2", "Model": "squeezenet1.1", "Ops": "MAX_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,111,111,64], "output dimensions": [1,55,55,64], "stride": [2], "filter": [3], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-3 CONV_2D example/2 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -246,16 +283,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-3 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [16], weight: [16,1,1,64], input dimensions: [1,55,55,64], output dimensions: [1,55,55,16], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-3", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [16], "weight": [16,1,1,64], "input dimensions": [1,55,55,64], "output dimensions": [1,55,55,16], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-4 CONV_2D example/3 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -340,16 +395,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-4 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,1,1,16], input dimensions: [1,55,55,16], output dimensions: [1,55,55,64], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-4", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,16], "input dimensions": [1,55,55,16], "output dimensions": [1,55,55,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-5 CONV_2D example/4 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -434,16 +507,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-5 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,3,3,16], input dimensions: [1,55,55,16], output dimensions: [1,55,55,64], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-5", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,16], "input dimensions": [1,55,55,16], "output dimensions": [1,55,55,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-6 CONCATENATION example/1 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -507,16 +598,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-6 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,55,55,64], output dimensions: [1,55,55,128], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-6", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,55,55,64], "output dimensions": [1,55,55,128], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-7 CONV_2D example/5 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -601,16 +710,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-7 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [16], weight: [16,1,1,128], input dimensions: [1,55,55,128], output dimensions: [1,55,55,16], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-7", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [16], "weight": [16,1,1,128], "input dimensions": [1,55,55,128], "output dimensions": [1,55,55,16], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-8 CONV_2D example/6 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -695,16 +822,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-8 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,1,1,16], input dimensions: [1,55,55,16], output dimensions: [1,55,55,64], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-8", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,16], "input dimensions": [1,55,55,16], "output dimensions": [1,55,55,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-9 CONV_2D example/7 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -789,16 +934,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-9 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,3,3,16], input dimensions: [1,55,55,16], output dimensions: [1,55,55,64], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-9", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,16], "input dimensions": [1,55,55,16], "output dimensions": [1,55,55,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-10 CONCATENATION example/2 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -862,16 +1025,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-10 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,55,55,64], output dimensions: [1,55,55,128], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-10", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,55,55,64], "output dimensions": [1,55,55,128], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-11 MAX_POOL_2D example/2 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
@@ -928,16 +1109,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, i0_input);
     let output_output = new Float32Array(type2_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-11 MAX_POOL_2D of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,55,55,128], output dimensions: [1,27,27,128], stride: [2], filter: [3], padding: [0], activation: [0]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations ; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-11", "Model": "squeezenet1.1", "Ops": "MAX_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,55,55,128], "output dimensions": [1,27,27,128], "stride": [2], "filter": [3], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-12 CONV_2D example/8 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1022,16 +1221,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-12 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [32], weight: [32,1,1,128], input dimensions: [1,27,27,128], output dimensions: [1,27,27,32], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-12", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,128], "input dimensions": [1,27,27,128], "output dimensions": [1,27,27,32], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-13 CONV_2D example/9 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1116,16 +1333,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-13 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [128], weight: [128,1,1,32], input dimensions: [1,27,27,32], output dimensions: [1,27,27,128], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-13", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,32], "input dimensions": [1,27,27,32], "output dimensions": [1,27,27,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-14 CONV_2D example/10 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1210,16 +1445,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-14 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [128], weight: [128,3,3,32], input dimensions: [1,27,27,32], output dimensions: [1,27,27,128], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-14", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,32], "input dimensions": [1,27,27,32], "output dimensions": [1,27,27,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-15 CONCATENATION example/3 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -1283,16 +1536,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-15 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,27,27,128], output dimensions: [1,27,27,256], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-15", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,27,27,128], "output dimensions": [1,27,27,256], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-16 CONV_2D example/11 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1377,16 +1648,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-16 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [32], weight: [32,1,1,256], input dimensions: [1,27,27,256], output dimensions: [1,27,27,32], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-16", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,256], "input dimensions": [1,27,27,256], "output dimensions": [1,27,27,32], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-17 CONV_2D example/12 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1471,16 +1760,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-17 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [128], weight: [128,1,1,32], input dimensions: [1,27,27,32], output dimensions: [1,27,27,128], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-17", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,32], "input dimensions": [1,27,27,32], "output dimensions": [1,27,27,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-18 CONV_2D example/13 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1565,16 +1872,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-18 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [128], weight: [128,3,3,32], input dimensions: [1,27,27,32], output dimensions: [1,27,27,128], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-18", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,32], "input dimensions": [1,27,27,32], "output dimensions": [1,27,27,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-19 CONCATENATION example/4 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -1638,16 +1963,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-19 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,27,27,128], output dimensions: [1,27,27,256], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-19", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,27,27,128], "output dimensions": [1,27,27,256], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-20 MAX_POOL_2D example/3 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
@@ -1704,16 +2047,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, i0_input);
     let output_output = new Float32Array(type2_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-20 MAX_POOL_2D of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,27,27,256], output dimensions: [1,13,13,256], stride: [2], filter: [3], padding: [0], activation: [0]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations ; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-20", "Model": "squeezenet1.1", "Ops": "MAX_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,27,27,256], "output dimensions": [1,13,13,256], "stride": [2], "filter": [3], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-21 CONV_2D example/14 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1798,16 +2159,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-21 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [48], weight: [48,1,1,256], input dimensions: [1,13,13,256], output dimensions: [1,13,13,48], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-21", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [48], "weight": [48,1,1,256], "input dimensions": [1,13,13,256], "output dimensions": [1,13,13,48], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-22 CONV_2D example/15 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1892,16 +2271,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-22 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [192], weight: [192,1,1,48], input dimensions: [1,13,13,48], output dimensions: [1,13,13,192], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-22", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,48], "input dimensions": [1,13,13,48], "output dimensions": [1,13,13,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-23 CONV_2D example/16 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -1986,16 +2383,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-23 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [192], weight: [192,3,3,48], input dimensions: [1,13,13,48], output dimensions: [1,13,13,192], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-23", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,3,3,48], "input dimensions": [1,13,13,48], "output dimensions": [1,13,13,192], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-24 CONCATENATION example/5 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -2059,16 +2474,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-24 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,13,13,192], output dimensions: [1,13,13,384], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-24", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,13,13,192], "output dimensions": [1,13,13,384], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-25 CONV_2D example/17 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2153,16 +2586,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-25 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [48], weight: [48,1,1,384], input dimensions: [1,13,13,384], output dimensions: [1,13,13,48], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-25", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [48], "weight": [48,1,1,384], "input dimensions": [1,13,13,384], "output dimensions": [1,13,13,48], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-26 CONV_2D example/18 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2247,16 +2698,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-26 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [192], weight: [192,1,1,48], input dimensions: [1,13,13,48], output dimensions: [1,13,13,192], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-26", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,48], "input dimensions": [1,13,13,48], "output dimensions": [1,13,13,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-27 CONV_2D example/19 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2341,16 +2810,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-27 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [192], weight: [192,3,3,48], input dimensions: [1,13,13,48], output dimensions: [1,13,13,192], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-27", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,3,3,48], "input dimensions": [1,13,13,48], "output dimensions": [1,13,13,192], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-28 CONCATENATION example/6 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -2414,16 +2901,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-28 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,13,13,192], output dimensions: [1,13,13,384], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-28", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,13,13,192], "output dimensions": [1,13,13,384], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-29 CONV_2D example/20 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2508,16 +3013,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-29 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,1,1,384], input dimensions: [1,13,13,384], output dimensions: [1,13,13,64], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-29", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,13,13,384], "output dimensions": [1,13,13,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-30 CONV_2D example/21 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2602,16 +3125,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-30 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [256], weight: [256,1,1,64], input dimensions: [1,13,13,64], output dimensions: [1,13,13,256], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-30", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,13,13,64], "output dimensions": [1,13,13,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-31 CONV_2D example/22 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2696,16 +3237,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-31 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [256], weight: [256,3,3,64], input dimensions: [1,13,13,64], output dimensions: [1,13,13,256], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-31", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,64], "input dimensions": [1,13,13,64], "output dimensions": [1,13,13,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-32 CONCATENATION example/7 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -2769,16 +3328,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-32 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,13,13,256], output dimensions: [1,13,13,512], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-32", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,13,13,256], "output dimensions": [1,13,13,512], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-33 CONV_2D example/23 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2863,16 +3440,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-33 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [64], weight: [64,1,1,512], input dimensions: [1,13,13,512], output dimensions: [1,13,13,64], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-33", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,512], "input dimensions": [1,13,13,512], "output dimensions": [1,13,13,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-34 CONV_2D example/24 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -2957,16 +3552,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-34 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [256], weight: [256,1,1,64], input dimensions: [1,13,13,64], output dimensions: [1,13,13,256], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-34", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,13,13,64], "output dimensions": [1,13,13,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-35 CONV_2D example/25 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3051,16 +3664,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-35 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [256], weight: [256,3,3,64], input dimensions: [1,13,13,64], output dimensions: [1,13,13,256], pad: [1], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-35", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,64], "input dimensions": [1,13,13,64], "output dimensions": [1,13,13,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-36 CONCATENATION example/8 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input1_value;
@@ -3124,16 +3755,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, input1_input);
     let output_output = new Float32Array(type3_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-36 CONCATENATION of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,13,13,256], output dimensions: [1,13,13,512], axis: [3]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-36", "Model": "squeezenet1.1", "Ops": "CONCATENATION", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,13,13,256], "output dimensions": [1,13,13,512], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": [3], "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type3_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
 
   it('Check result for layer-37 CONV_2D example/26 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3218,16 +3867,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-37 CONV_2D of squeezenet1.1 model, compute time: %f ms, bias: [1000], weight: [1000,1,1,512], input dimensions: [1,13,13,512], output dimensions: [1,13,13,1000], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-37", "Model": "squeezenet1.1", "Ops": "CONV_2D", "avg": avg, "bias": [1000], "weight": [1000,1,1,512], "input dimensions": [1,13,13,512], "output dimensions": [1,13,13,1000], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-38 AVERAGE_POOL_2D example/1 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
@@ -3284,16 +3951,33 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, i0_input);
     let output_output = new Float32Array(type2_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-38 AVERAGE_POOL_2D of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,13,13,1000], output dimensions: [1,1,1,1000], stride: [13], filter: [13], padding: [0], activation: [0]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-38", "Model": "squeezenet1.1", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,13,13,1000], "output dimensions": [1,1,1,1000], "stride": [13], "filter": [13], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
-
+  
   it('Check result for layer-39 RESHAPE example/1 of squeezenet1.1 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3342,16 +4026,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op3_output = new Float32Array(type2_length);
     execution.setOutput(0, op3_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-39 RESHAPE of squeezenet1.1 model, compute time: %f ms, input dimensions: [1,1,1,1000], output dimensions: [1,1000], shapeLen: [2], shapeValues: [1,1000]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-39", "Model": "squeezenet1.1", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
     }
   });
 
   it('Check result for layer-1 CONV_2D example/1 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3436,16 +4138,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-1 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [32], weight: [32,3,3,3], input dimensions: [1,224,224,3], output dimensions: [1,112,112,32], pad: [1], act: [1], stride: [2]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-1", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,3,3,3], "input dimensions": [1,224,224,3], "output dimensions": [1,112,112,32], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-2 CONV_2D example/2 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3530,16 +4250,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-2 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [32], weight: [32,1,1,32], input dimensions: [1,112,112,32], output dimensions: [1,112,112,32], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-2", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,32], "input dimensions": [1,112,112,32], "output dimensions": [1,112,112,32], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-3 CONV_2D example/3 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3624,16 +4362,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-3 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [16], weight: [16,1,1,32], input dimensions: [1,112,112,32], output dimensions: [1,112,112,16], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-3", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [16], "weight": [16,1,1,32], "input dimensions": [1,112,112,32], "output dimensions": [1,112,112,16], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-4 CONV_2D example/4 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3718,16 +4474,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-4 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [96], weight: [96,1,1,16], input dimensions: [1,112,112,16], output dimensions: [1,112,112,96], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-4", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,16], "input dimensions": [1,112,112,16], "output dimensions": [1,112,112,96], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-5 CONV_2D example/5 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3812,16 +4586,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-5 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [24], weight: [24,1,1,96], input dimensions: [1,56,56,96], output dimensions: [1,56,56,24], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-5", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,96], "input dimensions": [1,56,56,96], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-6 CONV_2D example/6 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -3906,16 +4698,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-6 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [144], weight: [144,1,1,24], input dimensions: [1,56,56,24], output dimensions: [1,56,56,144], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-6", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-7 CONV_2D example/7 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4000,16 +4810,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-7 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [24], weight: [24,1,1,144], input dimensions: [1,56,56,144], output dimensions: [1,56,56,24], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-7", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,144], "input dimensions": [1,56,56,144], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-8 CONV_2D example/8 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4094,16 +4922,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-8 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [144], weight: [144,1,1,24], input dimensions: [1,56,56,24], output dimensions: [1,56,56,144], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-8", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-9 CONV_2D example/9 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4188,16 +5034,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-9 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [32], weight: [32,1,1,144], input dimensions: [1,28,28,144], output dimensions: [1,28,28,32], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-9", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,144], "input dimensions": [1,28,28,144], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-10 CONV_2D example/10 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4282,16 +5146,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-10 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [192], weight: [192,1,1,32], input dimensions: [1,28,28,32], output dimensions: [1,28,28,192], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-10", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-11 CONV_2D example/11 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4376,16 +5258,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-11 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [32], weight: [32,1,1,192], input dimensions: [1,28,28,192], output dimensions: [1,28,28,32], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-11", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-12 CONV_2D example/12 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4470,16 +5370,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-12 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [192], weight: [192,1,1,32], input dimensions: [1,28,28,32], output dimensions: [1,28,28,192], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-12", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-13 CONV_2D example/13 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4564,16 +5482,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-13 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [32], weight: [32,1,1,192], input dimensions: [1,28,28,192], output dimensions: [1,28,28,32], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-13", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-14 CONV_2D example/14 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4658,16 +5594,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-14 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [192], weight: [192,1,1,32], input dimensions: [1,28,28,32], output dimensions: [1,28,28,192], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-14", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-15 CONV_2D example/15 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4752,16 +5706,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-15 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [64], weight: [64,1,1,192], input dimensions: [1,28,28,192], output dimensions: [1,28,28,64], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-15", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-16 CONV_2D example/16 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4846,16 +5818,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-16 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [384], weight: [384,1,1,64], input dimensions: [1,28,28,64], output dimensions: [1,28,28,384], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-16", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-17 CONV_2D example/17 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -4940,16 +5930,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-17 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [64], weight: [64,1,1,384], input dimensions: [1,28,28,384], output dimensions: [1,28,28,64], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-17", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-18 CONV_2D example/18 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5034,16 +6042,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-18 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [384], weight: [384,1,1,64], input dimensions: [1,28,28,64], output dimensions: [1,28,28,384], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-18", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-19 CONV_2D example/19 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5128,16 +6154,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-19 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [64], weight: [64,1,1,384], input dimensions: [1,28,28,384], output dimensions: [1,28,28,64], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-19", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-20 CONV_2D example/20 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5222,16 +6266,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-20 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [384], weight: [384,1,1,64], input dimensions: [1,28,28,64], output dimensions: [1,28,28,384], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-20", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-21 CONV_2D example/21 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5316,16 +6378,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-21 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [64], weight: [64,1,1,384], input dimensions: [1,28,28,384], output dimensions: [1,28,28,64], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-21", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-22 CONV_2D example/22 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5410,16 +6490,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-22 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [384], weight: [384,1,1,64], input dimensions: [1,28,28,64], output dimensions: [1,28,28,384], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-22", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-23 CONV_2D example/23 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5504,16 +6602,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-23 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [96], weight: [96,1,1,384], input dimensions: [1,14,14,384], output dimensions: [1,14,14,96], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-23", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,384], "input dimensions": [1,14,14,384], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-24 CONV_2D example/24 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5598,16 +6714,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-24 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [576], weight: [576,1,1,96], input dimensions: [1,14,14,96], output dimensions: [1,14,14,576], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-24", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-25 CONV_2D example/25 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5692,16 +6826,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-25 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [96], weight: [96,1,1,576], input dimensions: [1,14,14,576], output dimensions: [1,14,14,96], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-25", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-26 CONV_2D example/26 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5786,16 +6938,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-26 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [576], weight: [576,1,1,96], input dimensions: [1,14,14,96], output dimensions: [1,14,14,576], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-26", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-27 CONV_2D example/27 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5880,16 +7050,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-27 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [96], weight: [96,1,1,576], input dimensions: [1,14,14,576], output dimensions: [1,14,14,96], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-27", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-28 CONV_2D example/28 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -5974,16 +7162,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-28 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [576], weight: [576,1,1,96], input dimensions: [1,14,14,96], output dimensions: [1,14,14,576], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-28", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-29 CONV_2D example/29 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6068,16 +7274,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-29 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [160], weight: [160,1,1,576], input dimensions: [1,7,7,576], output dimensions: [1,7,7,160], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-29", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,576], "input dimensions": [1,7,7,576], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-30 CONV_2D example/30 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6162,16 +7386,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-30 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [960], weight: [960,1,1,160], input dimensions: [1,7,7,160], output dimensions: [1,7,7,960], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-30", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-31 CONV_2D example/31 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6256,16 +7498,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-31 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [160], weight: [160,1,1,960], input dimensions: [1,7,7,960], output dimensions: [1,7,7,160], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-31", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-32 CONV_2D example/32 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6350,16 +7610,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-32 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [960], weight: [960,1,1,160], input dimensions: [1,7,7,160], output dimensions: [1,7,7,960], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-32", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-33 CONV_2D example/33 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6444,16 +7722,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-33 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [160], weight: [160,1,1,960], input dimensions: [1,7,7,960], output dimensions: [1,7,7,160], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-33", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-34 CONV_2D example/34 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6538,16 +7834,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-34 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [960], weight: [960,1,1,160], input dimensions: [1,7,7,160], output dimensions: [1,7,7,960], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-34", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-35 CONV_2D example/35 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6632,16 +7946,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-35 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [320], weight: [320,1,1,960], input dimensions: [1,7,7,960], output dimensions: [1,7,7,320], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-35", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [320], "weight": [320,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,320], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-36 CONV_2D example/36 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6726,16 +8058,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-36 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [1280], weight: [1280,1,1,320], input dimensions: [1,7,7,320], output dimensions: [1,7,7,1280], pad: [0], act: [1], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-36", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1280], "weight": [1280,1,1,320], "input dimensions": [1,7,7,320], "output dimensions": [1,7,7,1280], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-37 AVERAGE_POOL_2D example/1 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let i0_value;
@@ -6792,16 +8142,33 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, i0_input);
     let output_output = new Float32Array(type2_length);
     execution.setOutput(0, output_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-37 AVERAGE_POOL_2D of mobilenetv2-1.0 model, compute time: %f ms, input dimensions: [1,7,7,1280], output dimensions: [1,1,1,1280], stride: [1], filter: [7], padding: [0], activation: [0]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-37", "Model": "mobilenetv2-1.0", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,1280], "output dimensions": [1,1,1,1280], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
     }
   });
-
+  
   it('Check result for layer-38 CONV_2D example/37 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6886,16 +8253,34 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op4_output = new Float32Array(type1_length);
     execution.setOutput(0, op4_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-38 CONV_2D of mobilenetv2-1.0 model, compute time: %f ms, bias: [1000], weight: [1000,1,1,1280], input dimensions: [1,1,1,1280], output dimensions: [1,1,1,1000], pad: [0], act: [0], stride: [1]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-38", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1000], "weight": [1000,1,1,1280], "input dimensions": [1,1,1,1280], "output dimensions": [1,1,1,1000], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type1_length; ++i) {
       assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
     }
   });
 
   it('Check result for layer-39 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
+    this.timeout(120000);
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let op1_value;
@@ -6944,14 +8329,29 @@ describe('CTS Real Model Test', function() {
     execution.setInput(0, op1_input);
     let op3_output = new Float32Array(type2_length);
     execution.setOutput(0, op3_output);
-    let tStart = performance.now();
-    await execution.startCompute();
-    let computeTime = performance.now() - tStart;
-    console.log('layer-39 RESHAPE of mobilenetv2-1.0 model, compute time: %f ms, input dimensions: [1,1,1,1000], output dimensions: [1,1000], shapeLen: [2], shapeValues: [1,1000]', computeTime)
+    let list = [];
+    iterations = Number(options.iterations) + 1;
+    for (let i = 0; i < iterations; i++) {
+      let tStart = performance.now();
+      await execution.startCompute();
+      let computeTime = performance.now() - tStart;
+      list.push(computeTime);
+    };
+    let sum = 0;
+    list.shift();
+    let d = list.reduce((d, v) => {
+      d.sum += v;
+      return d;
+    }, {
+      sum: 0,
+    });
+    let avg = d.sum/list.length;
+    let data = {"layer": "layer-39", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
+    data = JSON.stringify(data);
+    document.getElementById("avg").insertAdjacentText("beforeend", data);
+    document.getElementById("avg").insertAdjacentText("beforeend", ",");
     for (let i = 0; i < type2_length; ++i) {
       assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
     }
   });
 });
-
-
