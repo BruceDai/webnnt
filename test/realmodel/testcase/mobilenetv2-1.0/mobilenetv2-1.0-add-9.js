@@ -1,12 +1,13 @@
 describe('CTS Real Model Test', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for layer-49 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-40 ADD example/9 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
-      let op1_value;
-      let op3_expect;
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/801').then((res) => {
+      let op1_value
+      let op2_value
+      let op3_expect
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/713').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -16,7 +17,7 @@ describe('CTS Real Model Test', function() {
         }
         op1_value = file_data;
       });
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/268').then((res) => {
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/715').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -26,20 +27,31 @@ describe('CTS Real Model Test', function() {
         }
         op3_expect = file_data;
       });
-      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1,1,1000]};
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/685').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,160]};
       let type0_length = product(type0.dimensions);
-      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1000]};
-      let type2_length = product(type2.dimensions);
-      let type1 = {type: nn.TENSOR_INT32, dimensions: [2]};
-      let type1_length = product(type1.dimensions);
       let op1 = operandIndex++;
       model.addOperand(type0);
       let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
       model.addOperand(type1);
       let op3 = operandIndex++;
-      model.addOperand(type2);
-      model.setOperandValue(op2, new Int32Array([1,1000]));
-      model.addOperation(nn.RESHAPE, [op1, op2], [op3]);
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
       model.identifyInputsAndOutputs([op1], [op3]);
       await model.finish();
       let compilation = await model.createCompilation();
@@ -48,7 +60,7 @@ describe('CTS Real Model Test', function() {
       let execution = await compilation.createExecution();
       let op1_input = new Float32Array(op1_value);
       execution.setInput(0, op1_input);
-      let op3_output = new Float32Array(type2_length);
+      let op3_output = new Float32Array(type0_length);
       execution.setOutput(0, op3_output);
       let list = [];
       iterations = Number(options.iterations) + 1;
@@ -67,11 +79,11 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-49", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
+      let data = {"layer": "layer-40", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
-      for (let i = 0; i < type2_length; ++i) {
+      for (let i = 0; i < type0_length; ++i) {
         assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
       }
     });
