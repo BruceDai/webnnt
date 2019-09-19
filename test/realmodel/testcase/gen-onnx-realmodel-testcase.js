@@ -12,7 +12,7 @@ for (let i = 0; i < list.length; i++) {
     let filePath = path.join(filePath2, `${data[i]}`);
     data_model = fs.readFileSync(filePath);
     data_model = data_model.toString();
-    data_model = data_model.slice(127, -3);
+    data_model = data_model.slice(131, -3);
     result += data_model;
   };
 };
