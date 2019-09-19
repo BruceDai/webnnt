@@ -59,8 +59,8 @@ describe('CTS Real Model Test', function() {
       let output_output = new Float32Array(type2_length);
       execution.setOutput(0, output_output);
       let list = [];
-      iterations = Number(options.iterations) + 1;
-      for (let i = 0; i < iterations; i++) {
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
         let tStart = performance.now();
         await execution.startCompute();
         let computeTime = performance.now() - tStart;

@@ -4,9 +4,9 @@ describe('CTS Real Model Test', function() {
     it('Check result for layer-32 ADD example/7 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
-      let op1_value
-      let op2_value
-      let op3_expect
+      let op1_value;
+      let op2_value;
+      let op3_expect;
       await fetch('./realmodel/testcase/res/mobilenetv2-1.0/625').then((res) => {
         return res.json();
       }).then((text) => {
@@ -63,8 +63,8 @@ describe('CTS Real Model Test', function() {
       let op3_output = new Float32Array(type0_length);
       execution.setOutput(0, op3_output);
       let list = [];
-      iterations = Number(options.iterations) + 1;
-      for (let i = 0; i < iterations; i++) {
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
         let tStart = performance.now();
         await execution.startCompute();
         let computeTime = performance.now() - tStart;
