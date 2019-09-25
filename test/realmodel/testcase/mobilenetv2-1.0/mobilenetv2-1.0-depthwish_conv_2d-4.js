@@ -1,12 +1,12 @@
 describe('CTS Real Model Test', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for layer-14 CONV_2D example/9 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-13 DEPTHWISE_CONV_2D example/4 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
       let op4_expect;
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/382').then((res) => {
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/372').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -16,7 +16,7 @@ describe('CTS Real Model Test', function() {
         }
         op1_value = file_data;
       });
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/391').then((res) => {
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/382').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -26,14 +26,14 @@ describe('CTS Real Model Test', function() {
         }
         op4_expect = file_data;
       });
-      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,144]};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,144]};
       let type0_length = product(type0.dimensions);
-      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,32]};
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,144]};
       let type1_length = product(type1.dimensions);
-      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [32]};
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [144]};
       let type2_length = product(type2.dimensions);
       let type3 = {type: nn.INT32};
-      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [32,1,1,144]};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,144]};
       let op1 = operandIndex++;
       model.addOperand(type0);
       let op2 = operandIndex++;
@@ -46,10 +46,12 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
       let op2value;
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/61').then((res) => {
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/56').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -60,7 +62,7 @@ describe('CTS Real Model Test', function() {
         op2value = file_data;
       });
       let op3value;
-      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/383').then((res) => {
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/373').then((res) => {
         return res.json();
       }).then((text) => {
         let file_data = new Float32Array(text.length);
@@ -72,10 +74,11 @@ describe('CTS Real Model Test', function() {
       });
       model.setOperandValue(op2, new Float32Array(op2value));
       model.setOperandValue(op3, new Float32Array(op3value));
-      model.setOperandValue(pad0, new Int32Array([0]));
-      model.setOperandValue(act, new Int32Array([0]));
-      model.setOperandValue(stride, new Int32Array([1]));
-      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
       model.identifyInputsAndOutputs([op1], [op4]);
       await model.finish();
       let compilation = await model.createCompilation();
@@ -103,7 +106,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-14", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,144], "input dimensions": [1,28,28,144], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-13", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [144], "weight": [1,3,3,144], "input dimensions": [1,56,56,144], "output dimensions": [1,28,28,144], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");

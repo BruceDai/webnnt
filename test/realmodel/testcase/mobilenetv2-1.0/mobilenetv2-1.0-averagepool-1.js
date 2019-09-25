@@ -1,7 +1,7 @@
 describe('CTS Real Model Test', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for layer-47 AVERAGE_POOL_2D example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-64 AVERAGE_POOL_2D example/1 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -74,7 +74,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-47", "Model": "mobilenetv2-1.0", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,1280], "output dimensions": [1,1,1,1280], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-64", "Model": "mobilenetv2-1.0", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,1280], "output dimensions": [1,1,1,1280], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");

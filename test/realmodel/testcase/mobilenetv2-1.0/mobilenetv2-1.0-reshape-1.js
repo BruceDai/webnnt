@@ -1,7 +1,7 @@
 describe('CTS Real Model Test', function() {
     const assert = chai.assert;
     const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for layer-49 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-66 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -67,7 +67,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-49", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
+      let data = {"layer": "layer-66", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");

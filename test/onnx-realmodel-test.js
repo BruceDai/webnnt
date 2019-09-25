@@ -4235,7 +4235,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-3 CONV_2D example/3 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-3 DEPTHWISE_CONV_2D example/1 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/286').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/296').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,32]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,32]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [32]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,32]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/11').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/287').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-3", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [32], "weight": [1,3,3,32], "input dimensions": [1,112,112,32], "output dimensions": [1,112,112,32], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-4 CONV_2D example/3 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4337,7 +4451,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-3", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [16], "weight": [16,1,1,32], "input dimensions": [1,112,112,32], "output dimensions": [1,112,112,16], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-4", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [16], "weight": [16,1,1,32], "input dimensions": [1,112,112,32], "output dimensions": [1,112,112,16], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4346,7 +4460,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-4 CONV_2D example/4 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-5 CONV_2D example/4 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4448,7 +4562,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-4", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,16], "input dimensions": [1,112,112,16], "output dimensions": [1,112,112,96], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-5", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,16], "input dimensions": [1,112,112,16], "output dimensions": [1,112,112,96], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4457,7 +4571,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-5 CONV_2D example/5 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-6 DEPTHWISE_CONV_2D example/2 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/314').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/324').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,96]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,96]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [96]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,96]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/26').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/315').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-6", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [96], "weight": [1,3,3,96], "input dimensions": [1,112,112,96], "output dimensions": [1,56,56,96], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-7 CONV_2D example/5 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4559,7 +4787,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-5", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,96], "input dimensions": [1,56,56,96], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-7", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,96], "input dimensions": [1,56,56,96], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4568,7 +4796,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-6 CONV_2D example/6 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-8 CONV_2D example/6 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4670,7 +4898,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-6", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-8", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4679,7 +4907,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-7 CONV_2D example/7 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-9 DEPTHWISE_CONV_2D example/3 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/342').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/352').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,144]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,144]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [144]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,144]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/41').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/343').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-9", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [144], "weight": [1,3,3,144], "input dimensions": [1,56,56,144], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-10 CONV_2D example/7 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4781,7 +5123,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-7", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,144], "input dimensions": [1,56,56,144], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-10", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [24], "weight": [24,1,1,144], "input dimensions": [1,56,56,144], "output dimensions": [1,56,56,24], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4790,7 +5132,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-8 ADD example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-11 ADD example/1 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4868,7 +5210,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-8", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,24], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-11", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,24], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4877,7 +5219,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-9 CONV_2D example/8 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-12 CONV_2D example/8 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4979,7 +5321,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-9", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-12", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [144], "weight": [144,1,1,24], "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,144], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -4988,7 +5330,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-10 CONV_2D example/9 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-13 DEPTHWISE_CONV_2D example/4 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/372').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/382').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,144]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,144]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [144]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,144]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/56').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/373').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-13", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [144], "weight": [1,3,3,144], "input dimensions": [1,56,56,144], "output dimensions": [1,28,28,144], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-14 CONV_2D example/9 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5090,7 +5546,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-10", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,144], "input dimensions": [1,28,28,144], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-14", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,144], "input dimensions": [1,28,28,144], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5099,7 +5555,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-11 CONV_2D example/10 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-15 CONV_2D example/10 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5201,7 +5657,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-11", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-15", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5210,7 +5666,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-12 CONV_2D example/11 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-16 DEPTHWISE_CONV_2D example/5 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/400').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/410').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [192]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,192]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/71').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/401').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-16", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [192], "weight": [1,3,3,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-17 CONV_2D example/11 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5312,7 +5882,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-12", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-17", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5321,7 +5891,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-13 ADD example/2 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-18 ADD example/2 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5399,7 +5969,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-13", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-18", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5408,7 +5978,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-14 CONV_2D example/12 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-19 CONV_2D example/12 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5510,7 +6080,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-14", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-19", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5519,7 +6089,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-15 CONV_2D example/13 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-20 DEPTHWISE_CONV_2D example/6 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/430').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/440').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [192]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,192]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/86').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/431').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-20", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [192], "weight": [1,3,3,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-21 CONV_2D example/13 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5621,7 +6305,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-15", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-21", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [32], "weight": [32,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,32], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5630,7 +6314,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-16 ADD example/3 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-22 ADD example/3 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5708,7 +6392,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-16", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-22", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5717,7 +6401,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-17 CONV_2D example/14 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-23 CONV_2D example/14 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5819,7 +6503,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-17", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-23", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [192], "weight": [192,1,1,32], "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5828,7 +6512,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-18 CONV_2D example/15 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-24 DEPTHWISE_CONV_2D example/7 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/460').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/470').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,192]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [192]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,192]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/101').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/461').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-24", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [192], "weight": [1,3,3,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,192], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-25 CONV_2D example/15 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -5930,7 +6728,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-18", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-25", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,192], "input dimensions": [1,28,28,192], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5939,7 +6737,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-19 CONV_2D example/16 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-26 CONV_2D example/16 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6041,7 +6839,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-19", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-26", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6050,7 +6848,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-20 CONV_2D example/17 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-27 DEPTHWISE_CONV_2D example/8 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/488').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/498').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [384]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,384]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/116').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/489').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-27", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [384], "weight": [1,3,3,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-28 CONV_2D example/17 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6152,7 +7064,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-20", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-28", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6161,7 +7073,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-21 ADD example/4 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-29 ADD example/4 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6239,7 +7151,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-21", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-29", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6248,7 +7160,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-22 CONV_2D example/18 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-30 CONV_2D example/18 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6350,7 +7262,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-22", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-30", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6359,7 +7271,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-23 CONV_2D example/19 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-31 DEPTHWISE_CONV_2D example/9 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/518').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/528').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [384]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,384]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/131').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/519').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-31", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [384], "weight": [1,3,3,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-32 CONV_2D example/19 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6461,7 +7487,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-23", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-32", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6470,7 +7496,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-24 ADD example/5 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-33 ADD example/5 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6548,7 +7574,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-24", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-33", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6557,7 +7583,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-25 CONV_2D example/20 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-34 CONV_2D example/20 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6659,7 +7685,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-25", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-34", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6668,7 +7694,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-26 CONV_2D example/21 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-35 DEPTHWISE_CONV_2D example/10 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/548').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/558').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [384]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,384]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/146').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/549').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-35", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [384], "weight": [1,3,3,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-36 CONV_2D example/21 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6770,7 +7910,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-26", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-36", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,384], "input dimensions": [1,28,28,384], "output dimensions": [1,28,28,64], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6779,7 +7919,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-27 ADD example/6 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-37 ADD example/6 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6857,7 +7997,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-27", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-37", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6866,7 +8006,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-28 CONV_2D example/22 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-38 CONV_2D example/22 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -6968,7 +8108,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-28", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-38", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [384], "weight": [384,1,1,64], "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,384], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6977,7 +8117,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-29 CONV_2D example/23 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-39 DEPTHWISE_CONV_2D example/11 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/578').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/588').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,384]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,384]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [384]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,384]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/161').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/579').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-39", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [384], "weight": [1,3,3,384], "input dimensions": [1,28,28,384], "output dimensions": [1,14,14,384], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-40 CONV_2D example/23 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7079,7 +8333,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-29", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,384], "input dimensions": [1,14,14,384], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-40", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,384], "input dimensions": [1,14,14,384], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7088,7 +8342,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-30 CONV_2D example/24 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-41 CONV_2D example/24 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7190,7 +8444,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-30", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-41", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7199,7 +8453,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-31 CONV_2D example/25 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-42 DEPTHWISE_CONV_2D example/12 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/606').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/616').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,576]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,576]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [576]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,576]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/176').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/607').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-42", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [576], "weight": [1,3,3,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-43 CONV_2D example/25 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7301,7 +8669,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-31", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-43", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7310,7 +8678,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-32 ADD example/7 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-44 ADD example/7 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7388,7 +8756,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-32", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-44", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7397,7 +8765,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-33 CONV_2D example/26 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-45 CONV_2D example/26 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7499,7 +8867,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-33", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-45", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7508,7 +8876,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-34 CONV_2D example/27 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-46 DEPTHWISE_CONV_2D example/13 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/636').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/646').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,576]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,576]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [576]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,576]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/191').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/637').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-46", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [576], "weight": [1,3,3,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-47 CONV_2D example/27 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7610,7 +9092,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-34", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-47", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [96], "weight": [96,1,1,576], "input dimensions": [1,14,14,576], "output dimensions": [1,14,14,96], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7619,7 +9101,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-35 ADD example/8 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-48 ADD example/8 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7697,7 +9179,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-35", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-48", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7706,7 +9188,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-36 CONV_2D example/28 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-49 CONV_2D example/28 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7808,7 +9290,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-36", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-49", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [576], "weight": [576,1,1,96], "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,576], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7817,7 +9299,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-37 CONV_2D example/29 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-50 DEPTHWISE_CONV_2D example/14 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/666').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/676').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,576]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,576]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [576]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,576]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/206').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/667').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-50", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [576], "weight": [1,3,3,576], "input dimensions": [1,14,14,576], "output dimensions": [1,7,7,576], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-51 CONV_2D example/29 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -7919,7 +9515,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-37", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,576], "input dimensions": [1,7,7,576], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-51", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,576], "input dimensions": [1,7,7,576], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7928,7 +9524,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-38 CONV_2D example/30 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-52 CONV_2D example/30 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8030,7 +9626,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-38", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-52", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8039,7 +9635,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-39 CONV_2D example/31 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-53 DEPTHWISE_CONV_2D example/15 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/694').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/704').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [960]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,960]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/221').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/695').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-53", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [960], "weight": [1,3,3,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-54 CONV_2D example/31 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8141,7 +9851,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-39", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-54", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8150,7 +9860,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-40 ADD example/9 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-55 ADD example/9 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8228,7 +9938,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-40", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-55", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8237,7 +9947,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-41 CONV_2D example/32 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-56 CONV_2D example/32 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8339,7 +10049,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-41", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-56", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8348,7 +10058,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-42 CONV_2D example/33 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-57 DEPTHWISE_CONV_2D example/16 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/724').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/734').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [960]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,960]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/236').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/725').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-57", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [960], "weight": [1,3,3,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-58 CONV_2D example/33 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8450,7 +10274,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-42", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-58", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [160], "weight": [160,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,160], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8459,7 +10283,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-43 ADD example/10 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-59 ADD example/10 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8537,7 +10361,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-43", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-59", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8546,7 +10370,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-44 CONV_2D example/34 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-60 CONV_2D example/34 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8648,7 +10472,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-44", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-60", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [960], "weight": [960,1,1,160], "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8657,7 +10481,121 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-45 CONV_2D example/35 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-61 DEPTHWISE_CONV_2D example/17 of mobilenetv2-1.0 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/754').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/764').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,960]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [960]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1,3,3,960]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let channelMultiplier = operandIndex++; 
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/251').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/mobilenetv2-1.0/755').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(channelMultiplier, new Int32Array([1]));
+      model.addOperation(nn.DEPTHWISE_CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, channelMultiplier, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-61", "Model": "mobilenetv2-1.0", "Ops": "DEPTHWISE_CONV_2D", "avg": avg, "bias": [960], "weight": [1,3,3,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,960], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-62 CONV_2D example/35 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8759,7 +10697,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-45", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [320], "weight": [320,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,320], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-62", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [320], "weight": [320,1,1,960], "input dimensions": [1,7,7,960], "output dimensions": [1,7,7,320], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8768,7 +10706,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-46 CONV_2D example/36 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-63 CONV_2D example/36 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -8870,7 +10808,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-46", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1280], "weight": [1280,1,1,320], "input dimensions": [1,7,7,320], "output dimensions": [1,7,7,1280], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-63", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1280], "weight": [1280,1,1,320], "input dimensions": [1,7,7,320], "output dimensions": [1,7,7,1280], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8879,7 +10817,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-47 AVERAGE_POOL_2D example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-64 AVERAGE_POOL_2D example/1 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -8952,7 +10890,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-47", "Model": "mobilenetv2-1.0", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,1280], "output dimensions": [1,1,1,1280], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-64", "Model": "mobilenetv2-1.0", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,1280], "output dimensions": [1,1,1,1280], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8961,7 +10899,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-48 CONV_2D example/37 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-65 CONV_2D example/37 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -9063,7 +11001,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-48", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1000], "weight": [1000,1,1,1280], "input dimensions": [1,1,1,1280], "output dimensions": [1,1,1,1000], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-65", "Model": "mobilenetv2-1.0", "Ops": "CONV_2D", "avg": avg, "bias": [1000], "weight": [1000,1,1,1280], "input dimensions": [1,1,1,1280], "output dimensions": [1,1,1,1000], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -9072,7 +11010,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-49 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
+    it('Check result for layer-66 RESHAPE example/1 of mobilenetv2-1.0 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -9138,7 +11076,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-49", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
+      let data = {"layer": "layer-66", "Model": "mobilenetv2-1.0", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,1000], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,1000]}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
