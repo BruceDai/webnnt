@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>WebML Polyfill | Mocha Tests</title>
+    <link href="./static/mocha/3.0.2/mocha.css" rel="stylesheet" />
+  </head>
+  <body>
+    <p id="avg" style="display:none"></p>
+    <div id="mocha"></div>
+    <script src="./cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./cdnjs.cloudflare.com/ajax/libs/mocha/4.0.1/mocha.min.js"></script>
+    <script src="./cdnjs.cloudflare.com/ajax/libs/chai/4.1.2/chai.min.js"></script>
+    <script src="./cdnjs.cloudflare.com/ajax/libs/fetch/2.0.3/fetch.min.js"></script>
+    <script src="../dist/webml-polyfill.js"></script>
+    <script src="./utils.js"></script>
+    <script>
+      setOptions();
+      mocha.setup('bdd');
+      mocha.setup({timeout:50000});
+    </script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-1.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-2.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-3.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-4.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-5.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-6.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-7.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-8.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-9.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-10.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-11.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-12.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-13.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-14.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-15.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-16.js"></script>
+    <script src="./realmodel/testcase/mobilenetv2-1.0/mobilenetv2-1.0-depthwish_conv_2d-17.js"></script>
+    <script>
+      window.mochaFinish = false;
+      mocha.globals(['jQuery']);
+      mocha.run(function() {window.mochaFinish = true});
+    </script>
+  </body>
+</html>
