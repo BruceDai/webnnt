@@ -19,10 +19,16 @@
       mocha.setup('bdd');
       mocha.setup({timeout:20000});
     </script>
-    <script src="./cts/test_supplement/argmax_2d_axis_0.js"></script>
-    <script src="./cts/test_supplement/argmax_2d_axis_1.js"></script>
-    <script src="./cts/test_supplement/argmax_3d_axis_2.js"></script>
-    <script src="./cts/test_supplement/argmax_4d_axis_3.js"></script>
+    <script src="./cts/test/V1_0_plus/prelu_float_1.js"></script>
+    <script src="./cts/test/V1_0_plus/prelu_float_2.js"></script>
+    <script src="./cts/test/V1_0_plus/prelu_quant8_1.js"></script>
+    <script src="./cts/test/V1_0_plus/prelu_quant8_2.js"></script>
+    <script src="./cts/test_supplement/prelu_float_broadcasting_2d.js"></script>
+    <script src="./cts/test_supplement/prelu_float_broadcasting_3d.js"></script>
+    <script src="./cts/test_supplement/prelu_float_broadcasting_4d.js"></script>
+    <script src="./cts/test_supplement/prelu_quant8_broadcasting_2d.js"></script>
+    <script src="./cts/test_supplement/prelu_quant8_broadcasting_3d.js"></script>
+    <script src="./cts/test_supplement/prelu_quant8_broadcasting_4d.js"></script>
     <script>
       mocha.globals(['jQuery']);
       mocha.run();
