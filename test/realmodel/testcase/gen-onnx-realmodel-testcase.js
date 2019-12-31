@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-list = ['squeezenet1.1', 'mobilenetv2-1.0'];
+list = ['squeezenet1.1', 'mobilenetv2-1.0', 'resnet50v1', 'resnet50v2'];
 result = "describe('CTS Real Model Test', function() {" + '\n' + '  ' + "const assert = chai.assert;" + '\n' + '  ' + "const nn = navigator.ml.getNeuralNetworkContext();";
 for (let i = 0; i < list.length; i++) {
   let filePath1 = path.join(__dirname, `${list[i]}`, `${list[i]}.txt`);

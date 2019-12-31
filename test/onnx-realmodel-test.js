@@ -11084,4 +11084,17258 @@ describe('CTS Real Model Test', function() {
         assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
       }
     });
+  
+    it('Check result for layer-1 CONV_2D example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/0').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/309').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,224,224,3]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,7,7,3]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/1').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/301').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([3]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-1", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,7,7,3], "input dimensions": [1,224,224,3], "output dimensions": [1,112,112,64], "stride": [2], "filter": "null", "padding": [3], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-2 MAX_POOL_2D example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let i0_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/309').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        i0_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/319').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.INT32};
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type2_length = product(type2.dimensions);
+      let i0 = operandIndex++;
+      model.addOperand(type0);
+      let stride = operandIndex++;
+      model.addOperand(type1);
+      let filter = operandIndex++;
+      model.addOperand(type1);
+      let padding = operandIndex++;
+      model.addOperand(type1);
+      let activation = operandIndex++;
+      model.addOperand(type1);
+      let output = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(filter, new Int32Array([3]));
+      model.setOperandValue(padding, new Int32Array([1]));
+      model.setOperandValue(activation, new Int32Array([0]));
+      model.addOperation(nn.MAX_POOL_2D, [i0, padding, padding, padding, padding, stride, stride, filter, filter, activation], [output]);
+      model.identifyInputsAndOutputs([i0], [output]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let i0_input = new Float32Array(i0_value);
+      execution.setInput(0, i0_input);
+      let output_output = new Float32Array(type2_length);
+      execution.setOutput(0, output_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all ; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-2", "Model": "resnet50v1", "Ops": "MAX_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,112,112,64], "output dimensions": [1,56,56,64], "stride": [2], "filter": [3], "padding": [1], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-3 CONV_2D example/2 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/319').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/327').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/6').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/7').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-3", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-4 CONV_2D example/3 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/327').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/336').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/12').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/328').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-4", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-5 CONV_2D example/4 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/336').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/344').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/17').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/18').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-5", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-6 CONV_2D example/5 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/319').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/353').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/23').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/345').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-6", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-7 ADD example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/344').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/355').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/353').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-7", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-8 CONV_2D example/6 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/355').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/363').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/28').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/29').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-8", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-9 CONV_2D example/7 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/363').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/372').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/34').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/364').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-9", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-10 CONV_2D example/8 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/372').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/380').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/39').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/40').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-10", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-11 ADD example/2 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/380').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/382').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/355').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-11", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-12 CONV_2D example/9 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/382').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/390').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/45').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/46').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-12", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-13 CONV_2D example/10 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/390').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/399').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/51').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/391').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-13", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-14 CONV_2D example/11 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/399').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/407').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/56').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/57').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-14", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-15 ADD example/3 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/407').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/409').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/382').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-15", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-16 CONV_2D example/12 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/409').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/417').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/62').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/63').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-16", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,28,28,128], "stride": [2], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-17 CONV_2D example/13 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/417').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/426').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/68').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/418').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-17", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-18 CONV_2D example/14 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/426').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/434').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/73').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/74').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-18", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-19 CONV_2D example/15 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/409').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/443').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/79').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/435').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-19", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,28,28,512], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-20 ADD example/4 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/434').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/445').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/443').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-20", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-21 CONV_2D example/16 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/445').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/453').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/84').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/85').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-21", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-22 CONV_2D example/17 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/453').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/462').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/90').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/454').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-22", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-23 CONV_2D example/18 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/462').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/470').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/95').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/96').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-23", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-24 ADD example/5 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/470').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/472').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/445').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-24", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-25 CONV_2D example/19 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/472').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/480').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/101').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/102').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-25", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-26 CONV_2D example/20 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/480').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/489').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/107').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/481').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-26", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-27 CONV_2D example/21 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/489').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/497').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/112').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/113').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-27", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-28 ADD example/6 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/497').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/499').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/472').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-28", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-29 CONV_2D example/22 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/499').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/507').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/118').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/119').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-29", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-30 CONV_2D example/23 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/507').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/516').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/124').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/508').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-30", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-31 CONV_2D example/24 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/516').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/524').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/129').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/130').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-31", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-32 ADD example/7 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/524').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/526').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/499').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-32", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-33 CONV_2D example/25 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/526').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/534').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/135').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/136').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-33", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,14,14,256], "stride": [2], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-34 CONV_2D example/26 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/534').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/543').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/141').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/535').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-34", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-35 CONV_2D example/27 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/543').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/551').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/146').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/147').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-35", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-36 CONV_2D example/28 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/526').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/560').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/152').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/552').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-36", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,14,14,1024], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-37 ADD example/8 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/551').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/562').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/560').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-37", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-38 CONV_2D example/29 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/562').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/570').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/157').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/158').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-38", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-39 CONV_2D example/30 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/570').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/579').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/163').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/571').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-39", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-40 CONV_2D example/31 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/579').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/587').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/168').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/169').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-40", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-41 ADD example/9 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/587').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/589').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/562').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-41", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-42 CONV_2D example/32 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/589').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/597').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/174').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/175').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-42", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-43 CONV_2D example/33 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/597').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/606').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/180').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/598').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-43", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-44 CONV_2D example/34 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/606').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/614').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/185').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/186').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-44", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-45 ADD example/10 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/614').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/616').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/589').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-45", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-46 CONV_2D example/35 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/616').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/624').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/191').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/192').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-46", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-47 CONV_2D example/36 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/624').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/633').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/197').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/625').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-47", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-48 CONV_2D example/37 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/633').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/641').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/202').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/203').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-48", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-49 ADD example/11 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/641').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/643').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/616').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-49", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-50 CONV_2D example/38 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/643').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/651').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/208').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/209').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-50", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-51 CONV_2D example/39 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/651').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/660').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/214').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/652').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-51", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-52 CONV_2D example/40 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/660').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/668').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/219').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/220').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-52", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-53 ADD example/12 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/668').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/670').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/643').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-53", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-54 CONV_2D example/41 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/670').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/678').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/225').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/226').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-54", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-55 CONV_2D example/42 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/678').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/687').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/231').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/679').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-55", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-56 CONV_2D example/43 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/687').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/695').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/236').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/237').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-56", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-57 ADD example/13 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/695').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/697').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/670').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-57", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-58 CONV_2D example/44 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/697').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/705').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/242').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/243').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-58", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,7,7,512], "stride": [2], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-59 CONV_2D example/45 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/705').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/714').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/248').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/706').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-59", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-60 CONV_2D example/46 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/714').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/722').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/253').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/254').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-60", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-61 CONV_2D example/47 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/697').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/731').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/259').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/723').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-61", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,7,7,2048], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-62 ADD example/14 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/722').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/733').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/731').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-62", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-63 CONV_2D example/48 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/733').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/741').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/264').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/265').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-63", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-64 CONV_2D example/49 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/741').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/750').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/270').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/742').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-64", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-65 CONV_2D example/50 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/750').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/758').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/275').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/276').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-65", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-66 ADD example/15 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/758').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/760').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/733').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-66", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-67 CONV_2D example/51 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/760').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/768').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/281').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/282').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-67", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-68 CONV_2D example/52 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/768').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/777').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/287').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/769').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-68", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-69 CONV_2D example/53 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/777').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/785').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/292').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/293').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-69", "Model": "resnet50v1", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-70 ADD example/16 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/785').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/787').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/760').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([1]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-70", "Model": "resnet50v1", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[1]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-71 AVERAGE_POOL_2D example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let i0_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/787').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        i0_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/797').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.INT32};
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1,1,2048]};
+      let type2_length = product(type2.dimensions);
+      let i0 = operandIndex++;
+      model.addOperand(type0);
+      let stride = operandIndex++;
+      model.addOperand(type1);
+      let filter = operandIndex++;
+      model.addOperand(type1);
+      let padding = operandIndex++;
+      model.addOperand(type1);
+      let activation = operandIndex++;
+      model.addOperand(type1);
+      let output = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(filter, new Int32Array([7]));
+      model.setOperandValue(padding, new Int32Array([0]));
+      model.setOperandValue(activation, new Int32Array([0]));
+      model.addOperation(nn.AVERAGE_POOL_2D, [i0, padding, padding, padding, padding, stride, stride, filter, filter, activation], [output]);
+      model.identifyInputsAndOutputs([i0], [output]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let i0_input = new Float32Array(i0_value);
+      execution.setInput(0, i0_input);
+      let output_output = new Float32Array(type2_length);
+      execution.setOutput(0, output_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-71", "Model": "resnet50v1", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,1,1,2048], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-72 RESHAPE example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/797').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/799').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1,1,2048]};
+      let type0_length = product(type0.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,2048]};
+      let type2_length = product(type2.dimensions);
+      let type1 = {type: nn.TENSOR_INT32, dimensions: [2]};
+      let type1_length = product(type1.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(op2, new Int32Array([1,2048]));
+      model.addOperation(nn.RESHAPE, [op1, op2], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type2_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-72", "Model": "resnet50v1", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,2048], "output dimensions": [1,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,2048]}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-73 FULLY_CONNECTED example/1 of resnet50v1 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v1/799').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v1/300').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type4 = {type: nn.INT32};
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1000,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1000]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1000]};
+      let type3_length = product(type3.dimensions);
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,2048]};
+      let type0_length = product(type0.dimensions);
+
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type1);
+      let b0 = operandIndex++;
+      model.addOperand(type2);
+      let op3 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type4);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v1/298').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v1/299').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(b0, new Float32Array(op3value));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.FULLY_CONNECTED, [op1, op2, b0, act], [op3]);
+
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+
+      let execution = await compilation.createExecution();
+
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+
+      let op3_output = new Float32Array(type3_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all ; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-73", "Model": "resnet50v1", "Ops": "FULLY_CONNECTED", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,2048], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], output_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-1 CONV_2D example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/0').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/271').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,224,224,3]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,224,224,3]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [3]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [3,1,1,3]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/262').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/263').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-1", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [3], "weight": [3,1,1,3], "input dimensions": [1,224,224,3], "output dimensions": [1,224,224,3], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-2 CONV_2D example/2 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/271').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/280').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,224,224,3]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,7,7,3]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/5').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/272').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([3]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-2", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,7,7,3], "input dimensions": [1,224,224,3], "output dimensions": [1,112,112,64], "stride": [2], "filter": "null", "padding": [3], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-3 MAX_POOL_2D example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let i0_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/280').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        i0_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/290').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,112,112,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.INT32};
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type2_length = product(type2.dimensions);
+      let i0 = operandIndex++;
+      model.addOperand(type0);
+      let stride = operandIndex++;
+      model.addOperand(type1);
+      let filter = operandIndex++;
+      model.addOperand(type1);
+      let padding = operandIndex++;
+      model.addOperand(type1);
+      let activation = operandIndex++;
+      model.addOperand(type1);
+      let output = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.setOperandValue(filter, new Int32Array([3]));
+      model.setOperandValue(padding, new Int32Array([1]));
+      model.setOperandValue(activation, new Int32Array([0]));
+      model.addOperation(nn.MAX_POOL_2D, [i0, padding, padding, padding, padding, stride, stride, filter, filter, activation], [output]);
+      model.identifyInputsAndOutputs([i0], [output]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let i0_input = new Float32Array(i0_value);
+      execution.setInput(0, i0_input);
+      let output_output = new Float32Array(type2_length);
+      execution.setOutput(0, output_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all ; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-3", "Model": "resnet50v2", "Ops": "MAX_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,112,112,64], "output dimensions": [1,56,56,64], "stride": [2], "filter": [3], "padding": [1], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-4 CONV_2D example/3 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/290').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/300').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/291').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/292').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-4", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-5 CONV_2D example/4 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/300').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/309').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/14').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/301').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-5", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-6 CONV_2D example/5 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/309').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/318').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/19').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/310').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-6", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-7 CONV_2D example/6 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/318').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/327').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/24').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/319').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-7", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-8 CONV_2D example/7 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/300').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/336').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/25').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/328').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-8", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-9 ADD example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/327').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/338').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/336').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-9", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-10 CONV_2D example/8 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/338').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/348').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/339').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/340').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-10", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-11 CONV_2D example/9 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/348').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/357').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/30').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/349').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-11", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-12 CONV_2D example/10 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/357').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/366').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/35').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/358').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-12", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-13 CONV_2D example/11 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/366').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/375').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/40').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/367').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-13", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-14 ADD example/2 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/375').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/377').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/338').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-14", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-15 CONV_2D example/12 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/377').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/387').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/378').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/379').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-15", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-16 CONV_2D example/13 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/387').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/396').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/45').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/388').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-16", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-17 CONV_2D example/14 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/396').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/405').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [64]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [64,3,3,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/50').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/397').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-17", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [64], "weight": [64,3,3,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,64], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-18 CONV_2D example/15 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/405').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/414').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,64]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,64]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/55').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/406').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-18", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,64], "input dimensions": [1,56,56,64], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-19 ADD example/3 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/414').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/416').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/377').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-19", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-20 CONV_2D example/16 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/416').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/426').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/417').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/418').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-20", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-21 CONV_2D example/17 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/426').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/435').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/60').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/427').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-21", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,56,56,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-22 CONV_2D example/18 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/435').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/444').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/65').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/436').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-22", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,56,56,128], "output dimensions": [1,28,28,128], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-23 CONV_2D example/19 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/444').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/453').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/70').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/445').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-23", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-24 CONV_2D example/20 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/426').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/462').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,56,56,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/71').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/454').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-24", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,256], "input dimensions": [1,56,56,256], "output dimensions": [1,28,28,512], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-25 ADD example/4 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/453').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/464').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/462').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-25", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-26 CONV_2D example/21 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/464').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/474').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/465').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/466').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-26", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-27 CONV_2D example/22 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/474').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/483').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/76').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/475').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-27", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-28 CONV_2D example/23 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/483').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/492').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/81').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/484').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-28", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-29 CONV_2D example/24 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/492').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/501').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/86').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/493').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-29", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-30 ADD example/5 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/501').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/503').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/464').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-30", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-31 CONV_2D example/25 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/503').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/513').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/504').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/505').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-31", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-32 CONV_2D example/26 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/513').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/522').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/91').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/514').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-32", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-33 CONV_2D example/27 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/522').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/531').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/96').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/523').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-33", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-34 CONV_2D example/28 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/531').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/540').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/101').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/532').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-34", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-35 ADD example/6 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/540').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/542').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/503').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-35", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-36 CONV_2D example/29 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/542').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/552').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/543').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/544').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-36", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-37 CONV_2D example/30 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/552').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/561').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/106').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/553').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-37", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-38 CONV_2D example/31 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/561').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/570').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [128]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [128,3,3,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/111').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/562').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-38", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [128], "weight": [128,3,3,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,128], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-39 CONV_2D example/32 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/570').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/579').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,128]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,128]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/116').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/571').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-39", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,128], "input dimensions": [1,28,28,128], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-40 ADD example/7 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/579').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/581').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/542').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-40", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-41 CONV_2D example/33 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/581').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/591').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/582').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/583').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-41", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-42 CONV_2D example/34 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/591').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/600').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/121').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/592').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-42", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,28,28,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-43 CONV_2D example/35 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/600').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/609').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/126').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/601').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-43", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,28,28,256], "output dimensions": [1,14,14,256], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-44 CONV_2D example/36 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/609').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/618').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/131').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/610').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-44", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-45 CONV_2D example/37 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/591').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/627').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,28,28,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/132').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/619').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-45", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,512], "input dimensions": [1,28,28,512], "output dimensions": [1,14,14,1024], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-46 ADD example/8 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/618').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/629').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/627').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-46", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-47 CONV_2D example/38 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/629').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/639').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/630').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/631').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-47", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-48 CONV_2D example/39 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/639').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/648').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/137').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/640').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-48", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-49 CONV_2D example/40 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/648').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/657').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/142').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/649').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-49", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-50 CONV_2D example/41 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/657').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/666').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/147').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/658').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-50", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-51 ADD example/9 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/666').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/668').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/629').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-51", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-52 CONV_2D example/42 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/668').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/678').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/669').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/670').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-52", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-53 CONV_2D example/43 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/678').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/687').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/152').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/679').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-53", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-54 CONV_2D example/44 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/687').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/696').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/157').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/688').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-54", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-55 CONV_2D example/45 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/696').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/705').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/162').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/697').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-55", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-56 ADD example/10 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/705').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/707').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/668').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-56", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-57 CONV_2D example/46 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/707').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/717').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/708').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/709').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-57", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-58 CONV_2D example/47 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/717').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/726').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/167').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/718').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-58", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-59 CONV_2D example/48 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/726').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/735').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/172').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/727').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-59", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-60 CONV_2D example/49 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/735').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/744').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/177').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/736').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-60", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-61 ADD example/11 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/744').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/746').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/707').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-61", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-62 CONV_2D example/50 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/746').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/756').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/747').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/748').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-62", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-63 CONV_2D example/51 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/756').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/765').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/182').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/757').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-63", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-64 CONV_2D example/52 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/765').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/774').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/187').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/766').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-64", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-65 CONV_2D example/53 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/774').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/783').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/192').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/775').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-65", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-66 ADD example/12 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/783').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/785').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/746').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-66", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-67 CONV_2D example/54 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/785').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/795').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/786').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/787').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-67", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-68 CONV_2D example/55 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/795').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/804').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/197').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/796').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-68", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-69 CONV_2D example/56 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/804').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/813').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [256]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [256,3,3,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/202').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/805').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-69", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [256], "weight": [256,3,3,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,256], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-70 CONV_2D example/57 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/813').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/822').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,256]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,256]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/207').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/814').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-70", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,256], "input dimensions": [1,14,14,256], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-71 ADD example/13 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/822').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/824').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/785').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-71", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-72 CONV_2D example/58 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/824').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/834').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1024]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [1024,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/825').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/826').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-72", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [1024], "weight": [1024,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,1024], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-73 CONV_2D example/59 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/834').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/843').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/212').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/835').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-73", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,14,14,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-74 CONV_2D example/60 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/843').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/852').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/217').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/844').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-74", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,14,14,512], "output dimensions": [1,7,7,512], "stride": [2], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-75 CONV_2D example/61 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/852').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/861').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/222').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/853').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-75", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-76 CONV_2D example/62 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/834').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/870').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,14,14,1024]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,1024]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/223').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/862').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([2]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-76", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,1024], "input dimensions": [1,14,14,1024], "output dimensions": [1,7,7,2048], "stride": [2], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-77 ADD example/14 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/861').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/872').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/870').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-77", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-78 CONV_2D example/63 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/872').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/882').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/873').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/874').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-78", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-79 CONV_2D example/64 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/882').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/891').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/228').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/883').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-79", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-80 CONV_2D example/65 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/891').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/900').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/233').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/892').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-80", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-81 CONV_2D example/66 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/900').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/909').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/238').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/901').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-81", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-82 ADD example/15 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/909').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/911').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/872').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-82", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-83 CONV_2D example/67 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/911').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/921').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/912').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/913').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-83", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-84 CONV_2D example/68 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/921').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/930').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/243').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/922').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-84", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-85 CONV_2D example/69 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/930').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/939').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [512]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [512,3,3,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/248').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/931').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([1]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-85", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [512], "weight": [512,3,3,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,512], "stride": [1], "filter": "null", "padding": [1], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-86 CONV_2D example/70 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/939').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/948').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,512]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,512]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/253').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/940').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-86", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,512], "input dimensions": [1,7,7,512], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-87 ADD example/16 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op2_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/948').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/950').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/911').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2_value = file_data;
+      });
+      let type1 = {type: nn.INT32};
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type0);
+      let act = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type0);
+      let op2_input = new Float32Array(op2_value);
+      model.setOperandValue(op2, op2_input);
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.ADD, [op1, op2, act], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type0_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-87", "Model": "resnet50v2", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type0_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-88 CONV_2D example/71 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op4_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/950').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/960').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op4_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [2048]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.INT32};
+      let type4 = {type: nn.TENSOR_FLOAT32, dimensions: [2048,1,1,2048]};
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type4);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      let pad0 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type3);
+      let stride = operandIndex++;
+      model.addOperand(type3);
+      let op4 = operandIndex++;
+      model.addOperand(type1);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/951').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/952').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(op3, new Float32Array(op3value));
+      model.setOperandValue(pad0, new Int32Array([0]));
+      model.setOperandValue(act, new Int32Array([1]));
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.addOperation(nn.CONV_2D, [op1, op2, op3, pad0, pad0, pad0, pad0, stride, stride, act], [op4]);
+      model.identifyInputsAndOutputs([op1], [op4]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op4_output = new Float32Array(type1_length);
+      execution.setOutput(0, op4_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-88", "Model": "resnet50v2", "Ops": "CONV_2D", "avg": avg, "bias": [2048], "weight": [2048,1,1,2048], "input dimensions": [1,7,7,2048], "output dimensions": [1,7,7,2048], "stride": [1], "filter": "null", "padding": [0], "activation": [1], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type1_length; ++i) {
+        assert.isTrue(almostEqualCTS(op4_output[i], op4_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-89 AVERAGE_POOL_2D example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let i0_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/960').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        i0_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/970').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,7,7,2048]};
+      let type0_length = product(type0.dimensions);
+      let type1 = {type: nn.INT32};
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1,1,2048]};
+      let type2_length = product(type2.dimensions);
+      let i0 = operandIndex++;
+      model.addOperand(type0);
+      let stride = operandIndex++;
+      model.addOperand(type1);
+      let filter = operandIndex++;
+      model.addOperand(type1);
+      let padding = operandIndex++;
+      model.addOperand(type1);
+      let activation = operandIndex++;
+      model.addOperand(type1);
+      let output = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(stride, new Int32Array([1]));
+      model.setOperandValue(filter, new Int32Array([7]));
+      model.setOperandValue(padding, new Int32Array([0]));
+      model.setOperandValue(activation, new Int32Array([0]));
+      model.addOperation(nn.AVERAGE_POOL_2D, [i0, padding, padding, padding, padding, stride, stride, filter, filter, activation], [output]);
+      model.identifyInputsAndOutputs([i0], [output]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let i0_input = new Float32Array(i0_value);
+      execution.setInput(0, i0_input);
+      let output_output = new Float32Array(type2_length);
+      execution.setOutput(0, output_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-89", "Model": "resnet50v2", "Ops": "AVERAGE_POOL_2D", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,2048], "output dimensions": [1,1,1,2048], "stride": [1], "filter": [7], "padding": [0], "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(output_output[i], output_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-90 RESHAPE example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let op3_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/970').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/971').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3_expect = file_data;
+      });
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1,1,2048]};
+      let type0_length = product(type0.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1,2048]};
+      let type2_length = product(type2.dimensions);
+      let type1 = {type: nn.TENSOR_INT32, dimensions: [2]};
+      let type1_length = product(type1.dimensions);
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type1);
+      let op3 = operandIndex++;
+      model.addOperand(type2);
+      model.setOperandValue(op2, new Int32Array([1,2048]));
+      model.addOperation(nn.RESHAPE, [op1, op2], [op3]);
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+      let execution = await compilation.createExecution();
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+      let op3_output = new Float32Array(type2_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-90", "Model": "resnet50v2", "Ops": "RESHAPE", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,1,1,2048], "output dimensions": [1,2048], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": [2], "shapeValues": [1,2048]}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+      }
+    });
+  
+    it('Check result for layer-91 FULLY_CONNECTED example/1 of resnet50v2 model', async function() {
+      let model = await nn.createModel(options);
+      let operandIndex = 0;
+      let op1_value;
+      let output_expect;
+      await fetch('./realmodel/testcase/res/resnet50v2/971').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op1_value = file_data;
+      });
+      await fetch('./realmodel/testcase/res/resnet50v2/261').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        output_expect = file_data;
+      });
+      let type4 = {type: nn.INT32};
+      let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1000,2048]};
+      let type1_length = product(type1.dimensions);
+      let type2 = {type: nn.TENSOR_FLOAT32, dimensions: [1000]};
+      let type2_length = product(type2.dimensions);
+      let type3 = {type: nn.TENSOR_FLOAT32, dimensions: [1,1000]};
+      let type3_length = product(type3.dimensions);
+      let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1,2048]};
+      let type0_length = product(type0.dimensions);
+
+      let op1 = operandIndex++;
+      model.addOperand(type0);
+      let op2 = operandIndex++;
+      model.addOperand(type1);
+      let b0 = operandIndex++;
+      model.addOperand(type2);
+      let op3 = operandIndex++;
+      model.addOperand(type3);
+      let act = operandIndex++;
+      model.addOperand(type4);
+      let op2value;
+      await fetch('./realmodel/testcase/res/resnet50v2/259').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op2value = file_data;
+      });
+      let op3value;
+      await fetch('./realmodel/testcase/res/resnet50v2/260').then((res) => {
+        return res.json();
+      }).then((text) => {
+        let file_data = new Float32Array(text.length);
+        for (let j in text) {
+          let b = parseFloat(text[j]);
+          file_data[j] = b;
+        }
+        op3value = file_data;
+      });
+
+      model.setOperandValue(op2, new Float32Array(op2value));
+      model.setOperandValue(b0, new Float32Array(op3value));
+      model.setOperandValue(act, new Int32Array([0]));
+      model.addOperation(nn.FULLY_CONNECTED, [op1, op2, b0, act], [op3]);
+
+      model.identifyInputsAndOutputs([op1], [op3]);
+      await model.finish();
+
+      let compilation = await model.createCompilation();
+      compilation.setPreference(getPreferenceCode(options.prefer));
+      await compilation.finish();
+
+      let execution = await compilation.createExecution();
+
+      let op1_input = new Float32Array(op1_value);
+      execution.setInput(0, op1_input);
+
+      let op3_output = new Float32Array(type3_length);
+      execution.setOutput(0, op3_output);
+      let list = [];
+      iterations_all = Number(options.iterations) + 1;
+      for (let i = 0; i < iterations_all ; i++) {
+        let tStart = performance.now();
+        await execution.startCompute();
+        let computeTime = performance.now() - tStart;
+        list.push(computeTime);
+      };
+      let sum = 0;
+      list.shift();
+      let d = list.reduce((d, v) => {
+        d.sum += v;
+        return d;
+      }, {
+        sum: 0,
+      });
+      let avg = d.sum/list.length;
+      let data = {"layer": "layer-91", "Model": "resnet50v2", "Ops": "FULLY_CONNECTED", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,2048], "output dimensions": [1,1000], "stride": "null", "filter": "null", "padding": "null", "activation": [0], "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      data = JSON.stringify(data);
+      document.getElementById("avg").insertAdjacentText("beforeend", data);
+      document.getElementById("avg").insertAdjacentText("beforeend", ",");
+      for (let i = 0; i < type2_length; ++i) {
+        assert.isTrue(almostEqualCTS(op3_output[i], output_expect[i]));
+      }
+    });
   });
