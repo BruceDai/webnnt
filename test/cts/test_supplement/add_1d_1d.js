@@ -8,8 +8,6 @@ describe('CTS Supplement Test', function() {
     let operandIndex = 0;
     let expect = 11;
 
-    let model = await nn.createModel();
-
     let float32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [TENSOR_SIZE]};
     let scalarInt32Type = {type: nn.INT32};
 
