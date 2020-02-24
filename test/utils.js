@@ -89,6 +89,13 @@ function setOptions() {
           "prefer": 'low',
           "iterations": "1"
         };
+      } else if (prefer === "ultra-low-power") {
+        prefer = nn.PREFER_ULTRA_LOW_POWER;
+        options = {
+          "backend": 'WebML',
+          "prefer": 'ultra-low-power',
+          "iterations": "1"
+        };
       }
     }
   }
@@ -102,6 +109,8 @@ function getPreferenceCode(preferenceStr) {
     prefer = nn.PREFER_FAST_SINGLE_ANSWER;
   } else if (preferenceStr === 'low') {
     prefer = nn.PREFER_LOW_POWER;
+  } else if (preferenceStr === 'ultra-low-power') {
+    prefer = nn.PREFER_ULTRA_LOW_POWER;
   }else {
     console.error('Invalid preference string.');
   }
