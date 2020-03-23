@@ -1,4 +1,5 @@
 describe('CTS Supplement Test', function() {
+  this.timeout(20000);
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
 
@@ -3652,7 +3653,7 @@ describe('CTS Supplement Test', function() {
     model.setOperandValue(2, new Int32Array([axis]));
 
     let outputFloat32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [4, 2, 2, 2]};
-    const outputTensorLength = product(outputFloat32TensorType.dimensions);
+    let outputTensorLength = product(outputFloat32TensorType.dimensions);
 
     model.addOperand(outputFloat32TensorType);
     model.addOperation(nn.CONCATENATION, [0, 1, 2], [3]);
@@ -3703,7 +3704,7 @@ describe('CTS Supplement Test', function() {
     model.setOperandValue(2, new Int32Array([axis]));
 
     let outputFloat32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 4, 2, 2]};
-    const outputTensorLength = product(outputFloat32TensorType.dimensions);
+    let outputTensorLength = product(outputFloat32TensorType.dimensions);
 
     model.addOperand(outputFloat32TensorType);
     model.addOperation(nn.CONCATENATION, [0, 1, 2], [3]);
@@ -3754,7 +3755,7 @@ describe('CTS Supplement Test', function() {
     model.setOperandValue(2, new Int32Array([axis]));
 
     let outputFloat32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 2, 4, 2]};
-    const outputTensorLength = product(outputFloat32TensorType.dimensions);
+    let outputTensorLength = product(outputFloat32TensorType.dimensions);
 
     model.addOperand(outputFloat32TensorType);
     model.addOperation(nn.CONCATENATION, [0, 1, 2], [3]);
@@ -3808,7 +3809,7 @@ describe('CTS Supplement Test', function() {
     model.setOperandValue(2, new Int32Array([axis]));
 
     let outputFloat32TensorType = {type: nn.TENSOR_FLOAT32, dimensions: [2, 2, 2, 4]};
-    const outputTensorLength = product(outputFloat32TensorType.dimensions);
+    let outputTensorLength = product(outputFloat32TensorType.dimensions);
 
     model.addOperand(outputFloat32TensorType);
     model.addOperation(nn.CONCATENATION, [0, 1, 2], [3]);
@@ -4464,6 +4465,143 @@ describe('CTS Supplement Test', function() {
     await execution.startCompute();
 
     for (let i = 0; i < type4_length; ++i) {
+      assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+    }
+  });
+
+  it('check result for MAXIMUM example', async function() {
+    let model = await nn.createModel(options);
+    let operandIndex = 0;
+
+    let op1_value = [5.0, 5.0];
+    let op2_value = [3.0, 3.0];
+    let op3_expect = [5.0, 5.0];
+
+    let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [2]};
+    let type0_length = product(type0.dimensions);
+
+    let op1 = operandIndex++;
+    model.addOperand(type0);
+    let op2 = operandIndex++;
+    model.addOperand(type0);
+    let op3 = operandIndex++;
+    model.addOperand(type0);
+
+    let op2_input = new Float32Array(op2_value);
+    model.setOperandValue(op2, op2_input);
+
+    model.addOperation(nn.MAXIMUM, [op1, op2], [op3]);
+
+    model.identifyInputsAndOutputs([op1], [op3]);
+    await model.finish();
+
+    let compilation = await model.createCompilation();
+    compilation.setPreference(getPreferenceCode(options.prefer));
+    await compilation.finish();
+
+    let execution = await compilation.createExecution();
+
+    let op1_input = new Float32Array(op1_value);
+    execution.setInput(0, op1_input);
+
+    let op3_output = new Float32Array(type0_length);
+    execution.setOutput(0, op3_output);
+
+    await execution.startCompute();
+
+    for (let i = 0; i < type0_length; ++i) {
+      assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+    }
+  });
+
+  it('check result for MAXIMUM as 4-D tensor example', async function() {
+    let model = await nn.createModel(options);
+    let operandIndex = 0;
+
+    let op1_value = [5.0, 5.0, 5.0, 5.0];
+    let op2_value = [3.0, 3.0, 3.0, 3.0];
+    let op3_expect = [5.0, 5.0, 5.0, 5.0];
+
+    let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 2, 2, 1]};
+    let type0_length = product(type0.dimensions);
+
+    let op1 = operandIndex++;
+    model.addOperand(type0);
+    let op2 = operandIndex++;
+    model.addOperand(type0);
+    let op3 = operandIndex++;
+    model.addOperand(type0);
+
+    let op2_input = new Float32Array(op2_value);
+    model.setOperandValue(op2, op2_input);
+
+    model.addOperation(nn.MAXIMUM, [op1, op2], [op3]);
+
+    model.identifyInputsAndOutputs([op1], [op3]);
+    await model.finish();
+
+    let compilation = await model.createCompilation();
+    compilation.setPreference(getPreferenceCode(options.prefer));
+    await compilation.finish();
+
+    let execution = await compilation.createExecution();
+
+    let op1_input = new Float32Array(op1_value);
+    execution.setInput(0, op1_input);
+
+    let op3_output = new Float32Array(type0_length);
+    execution.setOutput(0, op3_output);
+
+    await execution.startCompute();
+
+    for (let i = 0; i < type0_length; ++i) {
+      assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
+    }
+  });
+
+  it('check result for MAXIMUM as compatible dimensions example', async function() {
+    let model = await nn.createModel(options);
+    let operandIndex = 0;
+
+    let op1_value = [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0];
+    let op2_value = [3.0, 3.0, 3.0, 3.0, 3.0];
+    let op3_expect = [5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0, 5.0];
+
+    let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 5, 2, 1]};
+    let type0_length = product(type0.dimensions);
+    let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 5, 1, 1]};
+    let type1_length = product(type0.dimensions);
+
+    let op1 = operandIndex++;
+    model.addOperand(type0);
+    let op2 = operandIndex++;
+    model.addOperand(type1);
+    let op3 = operandIndex++;
+    model.addOperand(type0);
+
+    let op2_input = new Float32Array(op2_value);
+    model.setOperandValue(op2, op2_input);
+
+    model.addOperation(nn.MAXIMUM, [op1, op2], [op3]);
+
+    model.identifyInputsAndOutputs([op1], [op3]);
+    await model.finish();
+
+    let compilation = await model.createCompilation();
+    compilation.setPreference(getPreferenceCode(options.prefer));
+    await compilation.finish();
+
+    let execution = await compilation.createExecution();
+
+    let op1_input = new Float32Array(op1_value);
+    execution.setInput(0, op1_input);
+
+    let op3_output = new Float32Array(type0_length);
+    execution.setOutput(0, op3_output);
+
+    await execution.startCompute();
+
+    for (let i = 0; i < type0_length; ++i) {
       assert.isTrue(almostEqualCTS(op3_output[i], op3_expect[i]));
     }
   });
@@ -6574,6 +6712,102 @@ describe('CTS Supplement Test', function() {
     }
   });
 
+  it('check result for Resize bilinear with inputs (without align_corners) example', async function() {
+    let model = await nn.createModel(options);
+    let operandIndex = 0;
+
+    let op1_value = [1.0, 1.0, 2.0, 2.0];
+    let op2_expect = [1.0, 1.0, 1.0, 1.666666667, 1.666666667, 1.666666667, 2.0, 2.0, 2.0];
+
+    let type2 = {type: nn.INT32};
+    let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 2, 2, 1]};
+    let type0_length = product(type0.dimensions);
+    let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 3, 3, 1]};
+    let type1_length = product(type1.dimensions);
+
+    let op1 = operandIndex++;
+    model.addOperand(type0);
+    let op2 = operandIndex++;
+    model.addOperand(type1);
+    let height = operandIndex++;
+    model.addOperand(type2);
+    let width = operandIndex++;
+    model.addOperand(type2);
+
+    model.setOperandValue(height, new Int32Array([3]));
+    model.setOperandValue(width, new Int32Array([3]));
+    model.addOperation(nn.RESIZE_BILINEAR, [op1, height, width], [op2]);
+
+    model.identifyInputsAndOutputs([op1], [op2]);
+    await model.finish();
+
+    let compilation = await model.createCompilation();
+    compilation.setPreference(getPreferenceCode(options.prefer));
+    await compilation.finish();
+
+    let execution = await compilation.createExecution();
+
+    let op1_input = new Float32Array(op1_value);
+    execution.setInput(0, op1_input);
+
+    let op2_output = new Float32Array(type1_length);
+    execution.setOutput(0, op2_output);
+
+    await execution.startCompute();
+
+    for (let i = 0; i < type1_length; ++i) {
+      assert.isTrue(almostEqualCTS(op2_output[i], op2_expect[i]));
+    }
+  });
+
+  it('check result for Resize bilinear with inputs (without align_corners) example/2', async function() {
+    let model = await nn.createModel(options);
+    let operandIndex = 0;
+
+    let op1_value = [3, 4, 6, 10, 9, 10, 12, 16];
+    let op2_expect = [3, 4, 5, 8, 6, 10, 7, 8, 9, 12, 10, 14, 9, 10, 11, 14, 12, 16];
+
+    let type2 = {type: nn.INT32};
+    let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 2, 2, 2]};
+    let type0_length = product(type0.dimensions);
+    let type1 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 3, 3, 2]};
+    let type1_length = product(type1.dimensions);
+
+    let op1 = operandIndex++;
+    model.addOperand(type0);
+    let op2 = operandIndex++;
+    model.addOperand(type1);
+    let height = operandIndex++;
+    model.addOperand(type2);
+    let width = operandIndex++;
+    model.addOperand(type2);
+
+    model.setOperandValue(height, new Int32Array([3]));
+    model.setOperandValue(width, new Int32Array([3]));
+    model.addOperation(nn.RESIZE_BILINEAR, [op1, height, width], [op2]);
+
+    model.identifyInputsAndOutputs([op1], [op2]);
+    await model.finish();
+
+    let compilation = await model.createCompilation();
+    compilation.setPreference(getPreferenceCode(options.prefer));
+    await compilation.finish();
+
+    let execution = await compilation.createExecution();
+
+    let op1_input = new Float32Array(op1_value);
+    execution.setInput(0, op1_input);
+
+    let op2_output = new Float32Array(type1_length);
+    execution.setOutput(0, op2_output);
+
+    await execution.startCompute();
+
+    for (let i = 0; i < type1_length; ++i) {
+      assert.isTrue(almostEqualCTS(op2_output[i], op2_expect[i]));
+    }
+  });
+
   it('check result for Resize bilinear with inputs (without align_corners) distorted example/1', async function() {
     let model = await nn.createModel(options);
     let operandIndex = 0;
@@ -8420,7 +8654,7 @@ describe('CTS Supplement Test', function() {
     let model = await nn.createModel(options);
     let operandIndex = 0;
     let input_value = [10.63, 18.75, 12.91, 9.46, 7.31, 12.48, 9.55, 14.28, 19.07, 15.91, 18.47, 20.08];
-    let output_expect = [0.000296 , 0.9948254, 0.0028938, 0.0000919, 0.0000107, 0.0018824, 0.0000169, 0.001913 , 0.2301376, 0.0097638, 0.1263021, 0.6318661];
+    let output_expect = [0.000296, 0.9948254, 0.0028938, 0.0000919, 0.0000107, 0.0018824, 0.0000169, 0.001913, 0.2301376, 0.0097638, 0.1263021, 0.6318661];
 
     let type1 = {type: nn.FLOAT32};
     let type0 = {type: nn.TENSOR_FLOAT32, dimensions: [1, 1, 2, 6]};
