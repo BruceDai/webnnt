@@ -89,6 +89,11 @@ function setOptions() {
           "prefer": 'low',
           "iterations": "1"
         };
+        // Use 5ULP of FP16 range for DML low prefer
+        if (windowsPlatforms.indexOf(navigator.platform) !== -1) {
+          episilonCTS = EPISILON5ULP;
+          rtol = EPISILON5ULP;
+        }
       } else if (prefer === "ultra-low") {
         prefer = nn.PREFER_ULTRA_LOW_POWER;
         options = {
