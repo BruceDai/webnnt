@@ -1,7 +1,7 @@
 describe('CTS Real Model Test', function() {
   const assert = chai.assert;
   const nn = navigator.ml.getNeuralNetworkContext();
-    it('Check result for layer-1 CONV_2D example/1 of squeezenet1.1 model', async function() {
+    it('Check result for layer-1 CONV_2D example/27 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -112,7 +112,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-2 MAX_POOL_2D example/1 of squeezenet1.1 model', async function() {
+    it('Check result for layer-2 MAX_POOL_2D example/4 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -195,7 +195,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-3 CONV_2D example/2 of squeezenet1.1 model', async function() {
+    it('Check result for layer-3 CONV_2D example/28 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -306,7 +306,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-4 CONV_2D example/3 of squeezenet1.1 model', async function() {
+    it('Check result for layer-4 CONV_2D example/29 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -417,7 +417,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-5 CONV_2D example/4 of squeezenet1.1 model', async function() {
+    it('Check result for layer-5 CONV_2D example/30 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -528,7 +528,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-6 CONCATENATION example/1 of squeezenet1.1 model', async function() {
+    it('Check result for layer-6 CONCATENATION example/9 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -618,7 +618,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-7 CONV_2D example/5 of squeezenet1.1 model', async function() {
+    it('Check result for layer-7 CONV_2D example/31 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -729,7 +729,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-8 CONV_2D example/6 of squeezenet1.1 model', async function() {
+    it('Check result for layer-8 CONV_2D example/32 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -840,7 +840,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-9 CONV_2D example/7 of squeezenet1.1 model', async function() {
+    it('Check result for layer-9 CONV_2D example/33 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -951,7 +951,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-10 CONCATENATION example/2 of squeezenet1.1 model', async function() {
+    it('Check result for layer-10 CONCATENATION example/10 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -1041,7 +1041,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-11 MAX_POOL_2D example/2 of squeezenet1.1 model', async function() {
+    it('Check result for layer-11 MAX_POOL_2D example/5 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -1124,7 +1124,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-12 CONV_2D example/8 of squeezenet1.1 model', async function() {
+    it('Check result for layer-12 CONV_2D example/34 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1235,7 +1235,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-13 CONV_2D example/9 of squeezenet1.1 model', async function() {
+    it('Check result for layer-13 CONV_2D example/35 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1346,7 +1346,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-14 CONV_2D example/10 of squeezenet1.1 model', async function() {
+    it('Check result for layer-14 CONV_2D example/36 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1457,7 +1457,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-15 CONCATENATION example/3 of squeezenet1.1 model', async function() {
+    it('Check result for layer-15 CONCATENATION example/11 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -1547,7 +1547,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-16 CONV_2D example/11 of squeezenet1.1 model', async function() {
+    it('Check result for layer-16 CONV_2D example/37 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1658,7 +1658,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-17 CONV_2D example/12 of squeezenet1.1 model', async function() {
+    it('Check result for layer-17 CONV_2D example/38 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1769,7 +1769,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-18 CONV_2D example/13 of squeezenet1.1 model', async function() {
+    it('Check result for layer-18 CONV_2D example/39 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -1880,7 +1880,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-19 CONCATENATION example/4 of squeezenet1.1 model', async function() {
+    it('Check result for layer-19 CONCATENATION example/12 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -1970,7 +1970,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-20 MAX_POOL_2D example/3 of squeezenet1.1 model', async function() {
+    it('Check result for layer-20 MAX_POOL_2D example/6 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -2053,7 +2053,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-21 CONV_2D example/14 of squeezenet1.1 model', async function() {
+    it('Check result for layer-21 CONV_2D example/40 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2164,7 +2164,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-22 CONV_2D example/15 of squeezenet1.1 model', async function() {
+    it('Check result for layer-22 CONV_2D example/41 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2275,7 +2275,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-23 CONV_2D example/16 of squeezenet1.1 model', async function() {
+    it('Check result for layer-23 CONV_2D example/42 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2386,7 +2386,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-24 CONCATENATION example/5 of squeezenet1.1 model', async function() {
+    it('Check result for layer-24 CONCATENATION example/13 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -2476,7 +2476,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-25 CONV_2D example/17 of squeezenet1.1 model', async function() {
+    it('Check result for layer-25 CONV_2D example/43 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2587,7 +2587,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-26 CONV_2D example/18 of squeezenet1.1 model', async function() {
+    it('Check result for layer-26 CONV_2D example/44 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2698,7 +2698,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-27 CONV_2D example/19 of squeezenet1.1 model', async function() {
+    it('Check result for layer-27 CONV_2D example/45 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -2809,7 +2809,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-28 CONCATENATION example/6 of squeezenet1.1 model', async function() {
+    it('Check result for layer-28 CONCATENATION example/14 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -2899,7 +2899,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-29 CONV_2D example/20 of squeezenet1.1 model', async function() {
+    it('Check result for layer-29 CONV_2D example/46 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3010,7 +3010,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-30 CONV_2D example/21 of squeezenet1.1 model', async function() {
+    it('Check result for layer-30 CONV_2D example/47 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3121,7 +3121,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-31 CONV_2D example/22 of squeezenet1.1 model', async function() {
+    it('Check result for layer-31 CONV_2D example/48 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3232,7 +3232,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-32 CONCATENATION example/7 of squeezenet1.1 model', async function() {
+    it('Check result for layer-32 CONCATENATION example/15 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -3322,7 +3322,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-33 CONV_2D example/23 of squeezenet1.1 model', async function() {
+    it('Check result for layer-33 CONV_2D example/49 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3433,7 +3433,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-34 CONV_2D example/24 of squeezenet1.1 model', async function() {
+    it('Check result for layer-34 CONV_2D example/50 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3544,7 +3544,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-35 CONV_2D example/25 of squeezenet1.1 model', async function() {
+    it('Check result for layer-35 CONV_2D example/51 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3655,7 +3655,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-36 CONCATENATION example/8 of squeezenet1.1 model', async function() {
+    it('Check result for layer-36 CONCATENATION example/16 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let input1_value;
@@ -3745,7 +3745,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-37 CONV_2D example/26 of squeezenet1.1 model', async function() {
+    it('Check result for layer-37 CONV_2D example/52 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -3856,7 +3856,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-38 AVERAGE_POOL_2D example/1 of squeezenet1.1 model', async function() {
+    it('Check result for layer-38 AVERAGE_POOL_2D example/2 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let i0_value;
@@ -3938,7 +3938,7 @@ describe('CTS Real Model Test', function() {
       }
     });
   
-    it('Check result for layer-39 RESHAPE example/1 of squeezenet1.1 model', async function() {
+    it('Check result for layer-39 RESHAPE example/2 of squeezenet1.1 model', async function() {
       let model = await nn.createModel(options);
       let operandIndex = 0;
       let op1_value;
@@ -4280,7 +4280,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -4616,7 +4616,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -4952,7 +4952,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -5210,7 +5210,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-11", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,24], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-11", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,56,56,24], "output dimensions": [1,56,56,24], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -5375,7 +5375,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -5711,7 +5711,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -5969,7 +5969,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-18", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-18", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6134,7 +6134,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -6392,7 +6392,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-22", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-22", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,32], "output dimensions": [1,28,28,32], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -6557,7 +6557,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -6893,7 +6893,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -7151,7 +7151,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-29", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-29", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7316,7 +7316,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -7574,7 +7574,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-33", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-33", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -7739,7 +7739,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -7997,7 +7997,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-37", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-37", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,28,28,64], "output dimensions": [1,28,28,64], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8162,7 +8162,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -8498,7 +8498,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -8756,7 +8756,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-44", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-44", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -8921,7 +8921,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -9179,7 +9179,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-48", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-48", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,14,14,96], "output dimensions": [1,14,14,96], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -9344,7 +9344,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -9680,7 +9680,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -9938,7 +9938,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-55", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-55", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -10103,7 +10103,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
@@ -10361,7 +10361,7 @@ describe('CTS Real Model Test', function() {
         sum: 0,
       });
       let avg = d.sum/list.length;
-      let data = {"layer": "layer-59", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "null", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
+      let data = {"layer": "layer-59", "Model": "mobilenetv2-1.0", "Ops": "ADD", "avg": avg, "bias": "null", "weight": "null", "input dimensions": [1,7,7,160], "output dimensions": [1,7,7,160], "stride": "null", "filter": "null", "padding": "null", "activation": "[0]", "axis": "null", "shapeLen": "null", "shapeValues": "null"}
       data = JSON.stringify(data);
       document.getElementById("avg").insertAdjacentText("beforeend", data);
       document.getElementById("avg").insertAdjacentText("beforeend", ",");
@@ -10526,7 +10526,7 @@ describe('CTS Real Model Test', function() {
       model.addOperand(type3);
       let stride = operandIndex++;
       model.addOperand(type3);
-      let channelMultiplier = operandIndex++; 
+      let channelMultiplier = operandIndex++;
       model.addOperand(type3);
       let op4 = operandIndex++;
       model.addOperand(type1);
